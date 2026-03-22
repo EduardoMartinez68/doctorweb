@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .editor-sidebar {
+            width: 300px;
+            background-color: #343a40;
+            color: #fff;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .nav-tabs-custom {
+            background-color: #212529;
+            border: none;
+        }
+
+        .nav-tabs-custom .nav-link {
+            color: #adb5bd;
+            border: none;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            background-color: #343a40;
+            color: #fff;
+            border-top: 3px solid #0d6efd;
+        }
+
+        .field-card {
+            background-color: #e9ecef;
+            color: #212529;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 0.85rem;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            transition: transform 0.1s;
+        }
+
+        .field-card:hover {
+            background-color: #dee2e6;
+            transform: scale(1.02);
+        }
+
+        .field-card i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid #495057;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="editor-sidebar d-flex flex-column">
+        <ul class="nav nav-tabs nav-tabs-custom nav-fill" id="editorTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab"><i class="bi bi-plus-lg"></i> Add</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab"><i class="bi bi-laptop"></i> View</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab"><i class="bi bi-list-ul"></i> Properties</button>
+            </li>
+        </ul>
+
+        <div class="p-3">
+            <div id="components-container">
+                <h6 class="section-title">Components</h6>
+                <div class="row g-2" id="list-components"></div>
+            </div>
+
+            <div id="fields-container">
+                <h6 class="section-title">New Fields</h6>
+                <div class="row g-2" id="list-new-fields"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editorConfig = {
+            components: [
+                { id: 'tabs', label: 'Tabs', icon: 'bi-window-stack' },
+                { id: 'columns', label: 'Columns', icon: 'bi-columns-gutters' }
+            ],
+            newFields: [
+                {
+                    type: 'text',
+                    label: 'Text',
+                    icon: 'bi-type',
+                    config: { label: '', name: '', placeholder: '', required: false }
+                },
+                {
+                    type: 'integer',
+                    label: 'Integer',
+                    icon: 'bi-hash',
+                    config: { label: '', name: '', min: 0, max: 100, required: false }
+                },
+                {
+                    type: 'selection',
+                    label: 'Selection',
+                    icon: 'bi-caret-down-square',
+                    config: { label: '', name: '', options: [], required: true }
+                }
+            ]
+        };
+
+        
+        // Función para renderizar los elementos
+        function renderEditorTools() {
+            const compList = document.getElementById('list-components');
+            const fieldList = document.getElementById('list-new-fields');
+
+            // Renderizar Componentes
+            editorConfig.components.forEach(item => {
+                compList.innerHTML += `
+                <div class="col-6">
+                    <div class="field-card" draggable="true" onclick="selectElement('${item.id}')">
+                        <i class="${item.icon}"></i> ${item.label}
+                    </div>
+                </div>`;
+            });
+
+            // Renderizar New Fields
+            editorConfig.newFields.forEach(item => {
+                fieldList.innerHTML += `
+                <div class="col-6">
+                    <div class="field-card" draggable="true" data-type="${item.type}">
+                        <i class="${item.icon}"></i> ${item.label}
+                    </div>
+                </div>`;
+            });
+        }
+
+        function selectElement(id) {
+            console.log("Elemento seleccionado:", id);
+            // Aquí dispararías la lógica para mostrar las "Properties" del campo
+        }
+
+        document.addEventListener('DOMContentLoaded', renderEditorTools);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

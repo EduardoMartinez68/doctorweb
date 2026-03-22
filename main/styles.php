@@ -1,0 +1,114 @@
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-thin-straight/css/uicons-thin-straight.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-duotone-straight/css/uicons-duotone-straight.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+
+
+<style>
+    :root {
+        --med-primary: #004AAD;
+        --med-primary-hover: #082a57;
+        --text-color-title: #38B6FF;
+        --med-bg: #F4F5FF;
+        --med-text: #334155;
+        --med-border: #e2e8f0;
+        --doctor-brand-color: #004AAD; /* El verde médico que definimos */
+    }
+
+    body {
+        background-color: var(--med-bg);
+        font-family: 'Inter', sans-serif;
+        color: var(--med-text);
+        padding-top: 68px;
+    }
+
+    .form-container {
+        width: 100%;
+        margin: 10px auto;
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Estilo de los inputs */
+    .form-control,
+    .form-select {
+        border: 1px solid var(--med-border);
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--med-primary);
+        box-shadow: 0 0 0 4px rgba(0, 168, 168, 0.1);
+        outline: none;
+    }
+
+    /* Divisores de Sección Modernos */
+    .section-header {
+        background: linear-gradient(90deg, #f1f5f9 0%, #ffffff 100%);
+        padding: 12px 20px;
+        border-left: 4px solid var(--med-primary);
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--med-text);
+        margin-bottom: 25px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    /* Acordeón Minimalista (Desplegables) */
+    .accordion-item {
+        border: none;
+        margin-bottom: 15px;
+    }
+
+    .accordion-button {
+        background-color: white !important;
+        color: var(--med-text) !important;
+        font-weight: 600;
+        border: 1px solid var(--med-border) !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+        border-bottom: none !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .accordion-body {
+        border: 1px solid var(--med-border);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        background-color: #fff;
+    }
+
+    .btn-medical {
+        background-color: var(--med-primary);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: opacity 0.3s;
+    }
+
+    .btn-medical:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+    .btn-medical:hover{
+        background-color: var(--med-primary-hover);
+    }
+</style>
