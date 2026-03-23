@@ -25,28 +25,31 @@
 
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#"><i class="bi bi-house-door"></i> Dashboard</a>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php"><i class="bi bi-house-door"></i> Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Agenda</a>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Agenda</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Ventas</a>
+                <a class="nav-link nav-link-med" href="../../sales/views/home.php">Ventas</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Recetas</a>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Recetas</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Pacientes</a>
+                <a class="nav-link nav-link-med" href="../../patients/views/home.php">Pacientes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Usuarios</a>
+                <a class="nav-link nav-link-med" href="../../fiels/views/home.php">Archivos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Permisos</a>
+                <a class="nav-link nav-link-med" href="../../users/views/home.php">Usuarios</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="#">Configuraciones</a>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Permisos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-med" href="../../config/views/home.php">Configuraciones</a>
             </li>
             <li class="nav-item border-top mt-3 pt-3">
                 <a class="nav-link nav-link-med text-danger" href="#">
@@ -117,25 +120,6 @@
     });
 </script>
 
-
-<nav class="navbar doctor-web-nav fixed-top shadow-sm">
-    <div class="container-fluid">
-        <div class="d-flex align-items-center">
-            <button class="btn btn-menu-toggle me-3" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarMedico">
-                <span class="menu-icon">☰</span>
-            </button>
-
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
-                Doctor<span class="fw-light">Web</span>
-            </a>
-        </div>
-
-        <div class="d-none d-md-block text-white-50 small">
-            Panel de Control Médico v1.0
-        </div>
-    </div>
-</nav>
 
 <style>
     /* Clase única para evitar conflictos con otros navbars */

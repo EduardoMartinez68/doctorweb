@@ -1,4 +1,3 @@
-<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-thin-straight/css/uicons-thin-straight.css'>
@@ -9,24 +8,23 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-
+<link rel="icon" href="../public/img/favicon.ico?v=1.1" type="image/x-icon">
 
 <style>
     :root {
         --med-primary: #004AAD;
-        --med-primary-hover: #082a57;
+        --med-primary-hover: #02377e;
         --text-color-title: #38B6FF;
         --med-bg: #F4F5FF;
         --med-text: #334155;
         --med-border: #e2e8f0;
-        --doctor-brand-color: #004AAD; /* El verde médico que definimos */
+        --doctor-brand-color: #004AAD;
     }
 
     body {
         background-color: var(--med-bg);
         font-family: 'Inter', sans-serif;
         color: var(--med-text);
-        padding-top: 68px;
     }
 
     .form-container {
@@ -38,7 +36,6 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     }
 
-    /* Estilo de los inputs */
     .form-control,
     .form-select {
         border: 1px solid var(--med-border);
@@ -53,7 +50,6 @@
         outline: none;
     }
 
-    /* Divisores de Sección Modernos */
     .section-header {
         background: linear-gradient(90deg, #f1f5f9 0%, #ffffff 100%);
         padding: 12px 20px;
@@ -65,7 +61,6 @@
         border-radius: 0 8px 8px 0;
     }
 
-    /* Acordeón Minimalista (Desplegables) */
     .accordion-item {
         border: none;
         margin-bottom: 15px;
@@ -110,5 +105,51 @@
 
     .btn-medical:hover{
         background-color: var(--med-primary-hover);
+    }
+
+    .search-bar { max-width: 400px; }
+    .btn-add { border-radius: 50px; }
+    .table-container { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+</style>
+
+<style>
+    .navbar-odoo {
+        background-color: var(--med-primary);
+        padding: 0;
+    }
+
+    .navbar-odoo .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        padding: 10px 15px !important;
+        font-size: 14px;
+        text-transform: capitalize;
+    }
+
+    .navbar-odoo .nav-link:hover, .navbar-odoo .nav-item.show .nav-link {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff !important;
+    }
+
+    /* Estilo del menú desplegable (Dropdown) */
+    .dropdown-menu {
+        border-radius: 0; /* Odoo usa esquinas rectas */
+        margin-top: 0;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-size: 14px;
+    }
+
+    .dropdown-item {
+        padding: 8px 20px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f1f1f1;
+        color: var(--med-primary);
+    }
+
+    /* Quitar la flechita del dropdown para un look más limpio */
+    .dropdown-toggle::after {
+        display: none;
     }
 </style>
