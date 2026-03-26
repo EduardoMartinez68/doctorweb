@@ -15,7 +15,7 @@
         <tbody id="bodyHijos"></tbody>
     </table>
 </div>
-<button class="btn btn-outline-dark mb-4" onclick="agregarHijo()">+ Agregar hijo</button>
+<button class="btn btn-outline-primary mb-4" onclick="agregarHijo()" type="button">+ Agregar hijo</button>
 </div>
 
 
@@ -56,4 +56,20 @@
         btn.closest("tr").remove();
     }
 
+    function get_children_data() {
+        const children = [];
+        const rows = document.querySelectorAll("#bodyHijos tr");
+
+        rows.forEach(row => {
+            const child = {
+                gender: row.querySelector(".genero").value,
+                age: parseInt(row.querySelector(".edad").value) || 0,
+                is_healthy: row.querySelector(".sano").value === "Si", // Devuelve true si es "Si"
+                observations: row.querySelector(".observaciones").value
+            };
+            children.push(child);
+        });
+
+        return children;
+    }
 </script>

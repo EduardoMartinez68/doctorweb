@@ -17,7 +17,7 @@
     </table>
 </div>
 
-<button class="btn btn-outline-dark mb-4" onclick="agregarFamiliar()">+ Agregar familiar</button>
+<button class="btn btn-outline-primary mb-4" onclick="agregarFamiliar()" type="button">+ Agregar familiar</button>
 </div>
 
 <script>
@@ -67,4 +67,23 @@ function agregarFamiliar(data = {}) {
 
     tbody.appendChild(row);
 }
+
+function get_data_table_family(){
+    const family = [];
+    const rows = document.querySelectorAll("#bodyFamiliares tr");
+
+    rows.forEach(row => {
+        const data = {
+            family: row.querySelector(".familiar").value,
+            live: row.querySelector(".vive").value,
+            old: row.querySelector(".edad").value,
+            he_is_healthy.: row.querySelector(".sano").value,
+            comment: row.querySelector(".comentarios").value
+        };
+        family.push(data);
+    });
+
+    return family;
+}
+
 </script>

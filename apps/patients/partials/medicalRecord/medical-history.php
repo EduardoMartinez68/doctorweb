@@ -16,13 +16,14 @@
     </table>
 </div>
 
-<button class="btn btn-outline-dark mb-4" onclick="agregarLaboral()">+ Agregar registro</button>
+<button class="btn btn-outline-primary mb-4" onclick="agregarLaboral()" type="button">+ Agregar registro</button>
 
 
 
 <div class="section-title">Comentarios</div>
 <div class="mb-4">
     <textarea class="form-control" rows="5"
+        name="note_laboratory"
         placeholder="Escribe aquí observaciones médicas, antecedentes relevantes o notas del doctor...">
     </textarea>
 </div>
@@ -66,4 +67,28 @@
 
         tbody.appendChild(row);
     }
+
+    function get_ccupational_data() {
+        const occupationalHistory = [];
+        const rows = document.querySelectorAll("#bodyLaboral tr");
+
+        rows.forEach(row => {
+            // Lógica para obtener múltiples valores del select de exposición
+            const selectedExposures = Array.from(row.querySelector(".exposicion").selectedOptions)
+                .map(option => option.value);
+
+            const record = {
+                company: row.querySelector(".empresa").value,
+                job_title: row.querySelector(".puesto").value,
+                duration: row.querySelector(".tiempo").value,
+                had_accidents: row.querySelector(".accidentes").value === "Si",
+                exposures: selectedExposures
+            };
+            occupationalHistory.push(record);
+        });
+
+        return occupationalHistory
+    }
+
+
 </script>

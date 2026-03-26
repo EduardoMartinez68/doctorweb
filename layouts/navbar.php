@@ -25,7 +25,8 @@
 
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php"><i class="bi bi-house-door"></i> Dashboard</a>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php"><i class="bi bi-house-door"></i>
+                    Dashboard</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Agenda</a>
@@ -103,24 +104,6 @@
     }
 </style>
 
-<script>
-    // Lógica para detectar la tecla "Escape"
-    document.addEventListener('keydown', function (event) {
-        if (event.key === "Escape") {
-            const sidebarElement = document.getElementById('sidebarMedico');
-            const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(sidebarElement);
-
-            // Si está abierto lo cierra, si está cerrado lo abre
-            if (sidebarElement.classList.contains('show')) {
-                bsOffcanvas.hide();
-            } else {
-                bsOffcanvas.show();
-            }
-        }
-    });
-</script>
-
-
 <style>
     /* Clase única para evitar conflictos con otros navbars */
     .doctor-web-nav {
@@ -169,3 +152,155 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 </style>
+
+
+<script>
+    // Lógica para detectar la tecla "Escape"
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "Escape") {
+            const sidebarElement = document.getElementById('sidebarMedico');
+            const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(sidebarElement);
+
+            // Si está abierto lo cierra, si está cerrado lo abre
+            if (sidebarElement.classList.contains('show')) {
+                bsOffcanvas.hide();
+            } else {
+                bsOffcanvas.show();
+            }
+        }
+    });
+</script>
+
+<nav class="navbar navbar-expand-lg navbar-odoo shadow-sm">
+    <div class="container-fluid">
+        <button class="btn btn-menu-toggle me-3" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#sidebarMedico">
+            <span class="menu-icon">☰</span>
+        </button>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#plNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="plNavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.php">Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        ventas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="medical-record.php">Ver mis Ventas</a></li>
+                        <li><a class="dropdown-item" href="medical-record.php">Crear una Venta</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        Pacientes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/home.php">ver mis Pacientes</a></li>
+                        <li><a class="dropdown-item" onclick="open_pop_lateral('popPaciente')">Crear Paciente Rapido</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/medical-record.php">Crear expediente Paciente</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        Agenda
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="medical-record.php">Ver mi Agenda</a></li>
+                        <li><a class="dropdown-item" href="medical-record.php">Crear una Cita</a></li>
+                        <li><a class="dropdown-item" href="#">Crear un Evento</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script>
+    function add_module_to_the_menu(data) {
+        /*
+        example of the variable data:
+            const new_menu = {
+                name: 'reports',
+                link: '#',
+                submenu: {
+                    1: {
+                        name: 'see sales',
+                        link: 'sales.php'
+                    },
+                    2: {
+                        name: 'export PDF',
+                        link: '#',
+                        funcion: () => console.log("save PDF...")
+                    }
+                }
+            };
+        */
+        const navbarList = document.querySelector('#plNavbar .navbar-nav');
+        if (!navbarList) return;
+
+        // create the element list
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+
+        // see if have submenus
+        const tieneSubmenu = data.submenu && Object.keys(data.submenu).length > 0;
+
+        if (tieneSubmenu) {
+            li.classList.add('dropdown');
+
+            // here we will to create the link of the father
+            li.innerHTML = `
+            <a class="nav-link dropdown-toggle" href="${data.link || '#'}" data-bs-toggle="dropdown">
+                ${data.name}
+            </a>
+            <ul class="dropdown-menu"></ul>
+        `;
+
+            const ulSubmenu = li.querySelector('.dropdown-menu');
+
+            // read all the sub-elementos and the added to the menu
+            Object.values(data.submenu).forEach(sub => {
+                const subLi = document.createElement('li');
+                const subA = document.createElement('a');
+                subA.className = 'dropdown-item';
+                subA.href = sub.link || '#';
+                subA.textContent = sub.name;
+
+                //if the menu have a function we will add
+                if (sub.funcion) {
+                    subA.onclick = (e) => {
+                        //if have a link we will to save his link 
+                        if (!sub.link || sub.link === '#') e.preventDefault();
+                        sub.funcion();
+                    };
+                }
+
+                subLi.appendChild(subA);
+                ulSubmenu.appendChild(subLi);
+            });
+
+        } else {
+            // when not have submenu we will to create only the menu
+            const a = document.createElement('a');
+            a.className = 'nav-link';
+            a.href = data.link || '#';
+            a.textContent = data.name;
+
+            if (data.funcion) {
+                a.onclick = (e) => {
+                    if (!data.link || data.link === '#') e.preventDefault();
+                    data.funcion();
+                };
+            }
+            li.appendChild(a);
+        }
+
+        navbarList.appendChild(li);
+    }
+</script>

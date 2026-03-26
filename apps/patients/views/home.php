@@ -8,17 +8,31 @@
     <?php
     include '../../../layouts/styles.php';
     ?>
-<style>
-        .sidebar { background: #fff; min-height: 100vh; border-right: 1px solid #e2e8f0; }
-        .patient-card { border: none; border-radius: 16px; transition: transform 0.2s, box-shadow 0.2s; background: #fff; }
-        .patient-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+    <style>
+        .sidebar {
+            background: #fff;
+            min-height: 100vh;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .patient-card {
+            border: none;
+            border-radius: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 
 <body>
     <?php
     include '../../../layouts/navbar.php';
-    include '../layouts/menu.php';
+    include '../partials/menu.php';
     ?>
 
     <div class="container-fluid">
@@ -29,17 +43,15 @@
                         <h1 class="h3 fw-bold mb-1">Directorio de Pacientes</h1>
                         <p class="text-muted small">Tienes 24 pacientes programados para esta semana.</p>
                     </div>
-                    <a href="medical-record.php" class="btn btn-dark rounded-pill px-4 shadow-sm">
-                        <i class="bi bi-plus-lg me-2"></i>Registrar Paciente
-                    </a>
                 </div>
 
                 <div class="row mb-4">
                     <div class="col-md-5">
-                        <div class="search-container position-relative">
-                            <i class="bi bi-search"></i>
-                            <input type="text" class="form-control search-input"
-                                placeholder="Buscar por nombre, ID o diagnóstico...">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Buscar Paciente...">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary btn-search" type="button">Buscar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

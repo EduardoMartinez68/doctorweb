@@ -110,6 +110,19 @@
     .search-bar { max-width: 400px; }
     .btn-add { border-radius: 50px; }
     .table-container { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+    .btn-outline-primary{
+        border-color:var(--med-primary);
+        color:var(--med-primary);
+    }
+    .btn-outline-primary:hover{
+        background-color:var(--med-primary);
+        color:white;
+    }
+
+    .btn-search{
+        height: 100%;
+    }
 </style>
 
 <style>
