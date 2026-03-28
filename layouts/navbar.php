@@ -29,7 +29,7 @@
                     Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Agenda</a>
+                <a class="nav-link nav-link-med" href="../../agenda/views/home.php">Agenda</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-link-med" href="../../sales/views/home.php">Ventas</a>

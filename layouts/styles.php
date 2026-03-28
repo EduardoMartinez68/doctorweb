@@ -9,6 +9,7 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
 <link rel="icon" href="../public/img/favicon.ico?v=1.1" type="image/x-icon">
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-brands/css/uicons-brands.css'>
 
 <style>
     :root {
@@ -19,6 +20,7 @@
         --med-text: #334155;
         --med-border: #e2e8f0;
         --doctor-brand-color: #004AAD;
+        --med-primary-online: #004bad9a;
     }
 
     body {
@@ -116,8 +118,9 @@
         color:var(--med-primary);
     }
     .btn-outline-primary:hover{
-        background-color:var(--med-primary);
+        background-color:var(--med-primary-online);
         color:white;
+        border-color: transparent;
     }
 
     .btn-search{
