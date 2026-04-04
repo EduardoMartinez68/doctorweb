@@ -211,7 +211,7 @@
                         Agenda
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="medical-record.php">Ver mi Agenda</a></li>
+                        <li><a class="dropdown-item" href="../../agenda/views/home.php">Ver mi Agenda</a></li>
                         <li><a class="dropdown-item" href="medical-record.php">Crear una Cita</a></li>
                         <li><a class="dropdown-item" href="#">Crear un Evento</a></li>
                     </ul>
