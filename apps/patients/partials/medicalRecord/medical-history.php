@@ -22,10 +22,7 @@
 
 <div class="section-title">Comentarios</div>
 <div class="mb-4">
-    <textarea class="form-control" rows="5"
-        name="note_laboratory"
-        placeholder="Escribe aquí observaciones médicas, antecedentes relevantes o notas del doctor...">
-    </textarea>
+    <textarea class="form-control" rows="5"name="note_laboratory"placeholder="Escribe aquí observaciones médicas, antecedentes relevantes o notas del doctor..."></textarea>
 </div>
 </div>
 

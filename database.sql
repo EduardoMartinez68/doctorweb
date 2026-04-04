@@ -45,9 +45,11 @@ CREATE TABLE clinic (
 
 /*--------------------------------------HISTORY CLINIC---------------------------------------------*/
 CREATE TABLE patients (
+    /*ALL THIS INFORMATION BE ENCRYPTED EXCEPT THE <KEY_ID> BECAUSE THE USER CAN USE IT FOR SEARCHING*/
     id INT AUTO_INCREMENT PRIMARY KEY,
     clinic_id INT NOT NULL,
     
+    key_id VARCHAR(100) UNIQUE NOT NULL, -- could be a national ID, social security number, or a custom identifier
     name TEXT NOT NULL,
     phone TEXT,
     cellphone TEXT,
@@ -319,4 +321,20 @@ CREATE TABLE medical_records (
 
     /* -------------------- CHILDREN   -------------------- */
     children JSON,
+
+    /* -------------------- MEDICAL EXAM   -------------------- */
+    -- JSON con todos los checkboxes
+    symptoms JSON,
+
+    -- Comentarios
+    physical_exam_notes TEXT,
+
+    -- Actividad física
+    does_exercise BOOLEAN,
+    exercise_type VARCHAR(100),
+    exercise_frequency VARCHAR(100),
+
+    -- Capacidad física
+    safety_shoe_impediment BOOLEAN,
+    dominant_hand ENUM('right', 'left', 'ambidextrous'),
 );

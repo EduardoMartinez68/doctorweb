@@ -78,11 +78,6 @@
 
     <div class="mb-4">
         <label class="form-label">Observaciones Gineco-Obstétricas</label>
-        <textarea 
-            class="form-control gineco_obs" 
-            name="ob_gyn_observations" 
-            rows="4" 
-            placeholder="Ej: irregularidades, tratamientos, antecedentes importantes...">
-        </textarea>
+        <textarea class="form-control gineco_obs" name="ob_gyn_observations" rows="4" placeholder="Ej: irregularidades, tratamientos, antecedentes importantes..."></textarea>
     </div>
 </div>

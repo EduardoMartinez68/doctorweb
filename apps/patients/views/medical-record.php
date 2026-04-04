@@ -27,6 +27,7 @@
             include '../partials/medicalRecord/family-history.php';
             include '../partials/medicalRecord/personal-background.php';
             include '../partials/medicalRecord/gynecological-and-obstetrical.php';
+            include '../partials/medicalRecord/medical-examination.php';
             ?>
 
             <!-- Botón -->
@@ -53,9 +54,12 @@
             data.family_history=get_data_table_family();
             data.children_data=get_children_data();
             data.laboratory_data=get_ccupational_data();
+            data.symptoms=get_medical_examination_data();
 
             console.log(JSON.stringify(data, null, 2));
         }
+
+
     </script>
 </body>
 
