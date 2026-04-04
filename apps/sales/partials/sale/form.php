@@ -18,8 +18,8 @@
         border-radius: 2px;
         padding: 40px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        max-width: 1100px;
         margin: 0 auto 40px auto;
+        height: 100vh;
     }
 
     .odoo-status-bar {
@@ -87,8 +87,8 @@
         background: #fcfcfc;
     }
 </style>
-<br>
-<div class="container">
+
+<div class="">
     <div class="odoo-sheet">
         <div class="odoo-status-bar">
             <span class="status-badge text-primary" style="background: #e0e7ff;">COTIZACIÓN</span>
