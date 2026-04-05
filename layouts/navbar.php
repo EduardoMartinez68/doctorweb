@@ -53,8 +53,8 @@
                 <a class="nav-link nav-link-med" href="../../config/views/home.php">Configuraciones</a>
             </li>
             <li class="nav-item border-top mt-3 pt-3">
-                <a class="nav-link nav-link-med text-danger" href="#">
-                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                <a class="nav-link nav-link-med text-danger" href="../../../middleware/logout.php"><i class="bi bi-box-arrow-right"></i>
+                     Cerrar Sesión</a>
                 </a>
             </li>
         </ul>

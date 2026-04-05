@@ -1,3 +1,6 @@
+<?php
+include '../../../middleware/authentication.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 

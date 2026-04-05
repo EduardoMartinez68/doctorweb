@@ -1,5 +1,5 @@
 /*--------------------------------------USERS---------------------------------------------*/
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
     photo LONGBLOB,
@@ -15,7 +15,7 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE clinic (
+CREATE TABLE IF NOT EXISTS clinic (
     id INT AUTO_INCREMENT PRIMARY KEY,
 
     logo LONGBLOB,
@@ -44,7 +44,7 @@ CREATE TABLE clinic (
 
 
 /*--------------------------------------HISTORY CLINIC---------------------------------------------*/
-CREATE TABLE patients (
+CREATE TABLE IF NOT EXISTS patients (
     /*ALL THIS INFORMATION BE ENCRYPTED EXCEPT THE <KEY_ID> BECAUSE THE USER CAN USE IT FOR SEARCHING*/
     id INT AUTO_INCREMENT PRIMARY KEY,
     clinic_id INT NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE patients (
 );
 
 /*--------------------------------------SALES---------------------------------------------*/
-CREATE TABLE services (
+CREATE TABLE IF NOT EXISTS services (
     id INT AUTO_INCREMENT PRIMARY KEY,
     clinic_id INT NOT NULL,
     
@@ -85,7 +85,7 @@ CREATE TABLE services (
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
 );
 
-CREATE TABLE sales (
+CREATE TABLE IF NOT EXISTS sales (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
     user_id INT NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE sales (
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE SET NULL
 );
 
-CREATE TABLE sale_items (
+CREATE TABLE IF NOT EXISTS sale_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
     sale_id INT NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE sale_items (
 
 
 
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sale_id INT NOT NULL,
 
@@ -150,7 +150,7 @@ CREATE TABLE payments (
 
 
 /*--------------------------------------APPOINTMENTS---------------------------------------------*/
-CREATE TABLE appointments (
+CREATE TABLE IF NOT EXISTS appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     patient_id INT NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE appointments (
 
 
 /*--------------------------------------CLINIC---------------------------------------------*/
-CREATE TABLE prescriptions (
+CREATE TABLE IF NOT EXISTS prescriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
     user_id INT NOT NULL, -- doctor
@@ -209,7 +209,7 @@ CREATE TABLE prescriptions (
     FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE SET NULL
 );
 
-CREATE TABLE prescription_items (
+CREATE TABLE IF NOT EXISTS prescription_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
     prescription_id INT NOT NULL,
@@ -228,7 +228,7 @@ CREATE TABLE prescription_items (
 
 
 /*--------------------------------------MEDICAL RECORDS---------------------------------------------*/
-CREATE TABLE medical_records (
+CREATE TABLE IF NOT EXISTS medical_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
 
     patient_id INT NOT NULL,

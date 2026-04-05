@@ -1,0 +1,2 @@
+/middleware/setup_admin.php 
+(esto es para crear el usuario admin)
