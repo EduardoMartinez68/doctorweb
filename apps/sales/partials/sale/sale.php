@@ -1,3 +1,28 @@
+<plus-pop name="modalUsuario" title="Selección de Cliente">
+    <label for="">Escribe la clave de tu cliente</label>
+    <input class="form-control" type="text" placeholder="Buscar cliente...">
+    <div class="row">
+        <div class="col">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Clave</th>
+                        <th>Nombre</th>
+                        <th>Celular</th>
+                    </tr>
+                </thead>
+                <tbody id="">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</plus-pop>
+<button onclick="openPop('modalUsuario')">Abrir Perfil</button>
+
+
+
+
 <table class="table align-middle">
     <thead>
         <tr>
@@ -58,19 +83,19 @@
 
             tr.innerHTML = `
             <td>
-                <input type="text" class="form-control form-control-sm servicio" value="${linea.servicio}">
+                <input type="text" class="form-control-plus form-control-sm servicio" value="${linea.servicio}">
             </td>
             <td>
-                <input type="text" class="form-control form-control-sm descripcion" value="${linea.descripcion}">
+                <input type="text" class="form-control-plus form-control-sm descripcion" value="${linea.descripcion}">
             </td>
             <td class="text-end">
-                <input type="number" class="form-control form-control-sm text-end cantidad" value="${linea.cantidad}">
+                <input type="number" class="form-control-plus form-control-sm text-end cantidad" value="${linea.cantidad}">
             </td>
             <td class="text-end">
-                <input type="number" class="form-control form-control-sm text-end precio" value="${linea.precio}">
+                <input type="number" class="form-control-plus form-control-sm text-end precio" value="${linea.precio}">
             </td>
             <td class="text-end">
-                <input type="number" class="form-control form-control-sm text-end descuento" value="${linea.descuento}">
+                <input type="number" class="form-control-plus form-control-sm text-end descuento" value="${linea.descuento}">
             </td>
             <td class="text-end fw-bold subtotal">$ 0.00</td>
             <td class="text-end">

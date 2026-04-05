@@ -41,20 +41,39 @@
     }
 
     /* Inputs minimalistas */
-    .form-control,
-    .form-select {
-        border: none;
-        border-bottom: 1px solid #ccc;
-        border-radius: 0;
-        padding-left: 0;
-    }
+/* Estilo Base: Minimalismo total */
+.form-control-plus,
+.form-select-plus {
+    border: none;
+    border-bottom: 1px solid #e2e2e2; /* Línea muy suave por defecto */
+    border-radius: 0;
+    padding: 0.375rem 0; /* Ajuste de padding para alinear el texto a la izquierda */
+    background-color: transparent;
+    transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
 
-    .form-control:focus,
-    .form-select:focus {
-        box-shadow: none;
-        border-bottom: 2px solid var(--med-primary);
-        /* Color morado Odoo */
-    }
+/* Efecto Hover: Indica que el campo es editable */
+.form-control-plus:hover,
+.form-select-plus:hover {
+    background-color: #f8f9fa; /* Un toque grisáceo muy leve */
+    border-bottom: 1px solid #666; /* La línea se oscurece un poco */
+}
+
+/* Efecto Focus (Edición activa): La línea "cobra vida" */
+.form-control-plus:focus,
+.form-select-plus:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+    border-bottom: 2px solid var(--med-primary); /* Línea más gruesa y con tu color corporativo */
+    margin-bottom: -1px; /* Evita que el layout "salte" por el cambio de 1px a 2px */
+}
+
+/* Ajuste para Selects: Quitar la flecha azul de Windows/Chrome si es necesario */
+.form-select-plus {
+    background-position: right 0 center;
+    padding-right: 1.5rem;
+}
 
     .odoo-label {
         font-weight: 600;
@@ -100,12 +119,15 @@
             <div class="col-md-6">
                 <h1 class="h3 mb-4">Nueva Venta</h1>
 
-                <div class="row mb-3">
-                    <label class="col-sm-4 odoo-label">Paciente</label>
-                    <div class="col-sm-8">
-                        <select class="form-select">
-                            <option>Seleccione un paciente...</option>
-                        </select>
+                <div class="mb-3 row">
+                    <div class="col">
+                        <label class="fw-bold text-secondary">Paciente seleccionado:</label>
+                        <div class="">
+                            <button type="button" class="btn-input-bootstrap" onclick="openPop('modalUsuario')">
+                                <span class="fw-medium text-dark">Juan Pérez García</span>
+                                <i class="bi bi-person-check-fill text-primary"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,7 @@
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-<link rel="icon" href="../public/img/favicon.ico?v=1.1" type="image/x-icon">
+<link rel="icon" href="../../../public/img/logo-doc-blue.ico?v=1.1" type="image/x-icon">
 <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-brands/css/uicons-brands.css'>
 
 <style>
@@ -168,4 +168,55 @@
     .dropdown-toggle::after {
         display: none;
     }
+</style>
+
+
+<style>
+/* Botón que emula exactamente un input de Bootstrap 5 */
+.btn-input-bootstrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #bbbbbb; /* Borde estándar de BS5 */
+    border-radius: 0.375rem; /* El redondeo clásico */
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-align: left;
+    cursor: pointer;
+    border-color: #bbbbbb;
+}
+
+/* Efecto Hover: Un borde sutilmente más oscuro */
+.btn-input-bootstrap:hover {
+    border-color: #adb5bd;
+    background-color: #fff;
+    color: #212529;
+}
+
+/* Efecto Focus: El resplandor azul (o el color de tu variable primary) */
+.btn-input-bootstrap:focus,
+.btn-input-bootstrap:active {
+    outline: 0;
+    border-color: #d4d4d4; /* Color de foco azul de BS5 */
+    background-color: #fff;
+}
+
+/* Texto de ayuda (placeholder) */
+.btn-input-bootstrap .text-muted-placeholder {
+    color: #6c757d;
+    opacity: 0.8;
+}
+
+/* Icono de búsqueda */
+.btn-input-bootstrap i {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
 </style>
