@@ -1,2 +1,90 @@
 /middleware/setup_admin.php 
 (esto es para crear el usuario admin)
+
+/-------------------------------------------------------------------------------------------------/
+Estamos usando boobstrap como UI. Estamos usando php como backend y mysql como base de datos. 
+Asi me conecto a mi base de datos con mi archivo database.php:
+<?php
+    $host = 'localhost';
+    $db   = 'plus_medico2';
+    $user = 'root';
+    $pass = '';
+    $charset = 'utf8mb4';
+
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+
+    try {
+            $pdo = new PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+            die('Error de conexión: ' . $e->getMessage());
+    }
+?>
+
+
+esta es la plantilla inicial que tiene normalmente todas mis apps:
+<?php
+include '../../../middleware/authentication.php';
+include '../../../middleware/database.php';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLUS</title>
+    <?php
+    include '../../../layouts/styles.php';
+    ?>
+</head>
+<body>
+    <?php
+    include '../../../layouts/navbar.php';
+    ?>
+
+
+
+
+
+    <?php
+    include '../../../layouts/scripts.php';
+    ?>
+</body>
+</html>
+
+Esto es lo que guardo en las sesiones:
+$_SESSION['user_id']   = $user['id'];
+$_SESSION['clinic_id']   = $user['id'];
+$_SESSION['user_name'] = $user['name'];
+$_SESSION['user_role'] = $user['role'];
+
+Me gustaria que me ayudes a crear el formulario para crear un paciente, deberas crear el formulario, la logica del backend , la notificacion si algo sale bien o mal.
+Esta es la tabla de los pacientes:
+CREATE TABLE IF NOT EXISTS patients (
+    /*ALL THIS INFORMATION BE ENCRYPTED EXCEPT THE <KEY_ID> BECAUSE THE USER CAN USE IT FOR SEARCHING*/
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clinic_id INT NOT NULL,
+    
+    key_id VARCHAR(100) UNIQUE NOT NULL, -- could be a national ID, social security number, or a custom identifier
+    name TEXT NOT NULL,
+    phone TEXT,
+    cellphone TEXT,
+    email TEXT,
+    
+    birth_date DATE,
+    
+    address TEXT,
+    notes TEXT,
+    
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
+);

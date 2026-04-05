@@ -1,6 +1,6 @@
 <?php
         $host = 'localhost';
-        $db   = 'plus_medico2';
+        $db   = 'plus_medico3';
         $user = 'root';
         $pass = '';
         $charset = 'utf8mb4';

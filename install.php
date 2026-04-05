@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 1. Limpieza profunda de comentarios
             $sql_content = preg_replace('!/\*.*?\*/!s', '', $sql_content); // Bloques /* */
             $sql_content = preg_replace('/^--.*$/m', '', $sql_content);    // Líneas --
-            
+
             // 2. Dividir el archivo en consultas individuales usando el ";"
             // Usamos una expresión regular para no romper si hay ; dentro de textos
             $queries = explode(';', $sql_content);
@@ -51,21 +51,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("No se encontró el archivo database.sql.");
         }
 
-        // 4. CREAR EL USUARIO ADMINISTRADOR PRINCIPAL
+        // 4. CREAR USUARIO ADMIN Y CLÍNICA INICIAL
         $adminName = "Administrador Principal";
         $adminEmail = "admin@doctorclick.com";
         $adminPass = "admin123";
         $passwordHash = password_hash($adminPass, PASSWORD_BCRYPT);
         $role = "admin";
 
-        // Verificamos si ya existe por si acaso
-        $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-        $check->execute([$adminEmail]);
+        // Datos de la clínica (puedes recibirlos por POST o usar valores por defecto)
+        $clinicName = $_POST['clinic_name'] ?? "Mi Clínica Principal";
+        $clinicAddress = $_POST['clinic_address'] ?? "Dirección de la clínica";
 
-        if ($check->rowCount() === 0) {
-            $sqlAdmin = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-            $stmt = $pdo->prepare($sqlAdmin);
-            $stmt->execute([$adminName, $adminEmail, $passwordHash, $role]);
+        try {
+            // Iniciamos una transacción para que si algo falla, no se cree nada a medias
+            $pdo->beginTransaction();
+
+            // A. Verificamos si el admin ya existe
+            $check = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $check->execute([$adminEmail]);
+
+            if ($check->rowCount() === 0) {
+
+                // B. Insertamos el Usuario primero
+                $sqlUser = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+                $stmtUser = $pdo->prepare($sqlUser);
+                $stmtUser->execute([$adminName, $adminEmail, $passwordHash, $role]);
+
+                $newUserId = $pdo->lastInsertId(); // Obtenemos el ID del admin
+
+                // C. Insertamos la Clínica vinculándola al usuario
+                $sqlClinic = "INSERT INTO clinic (name, address, user_id) VALUES (?, ?, ?)";
+                $stmtClinic = $pdo->prepare($sqlClinic);
+                $stmtClinic->execute([$clinicName, $clinicAddress, $newUserId]);
+
+                $newClinicId = $pdo->lastInsertId(); // Obtenemos el ID de la clínica
+
+                // D. Cerramos el círculo: Actualizamos al usuario con su clinic_id
+                $sqlUpdateUser = "UPDATE users SET clinic_id = ? WHERE id = ?";
+                $pdo->prepare($sqlUpdateUser)->execute([$newClinicId, $newUserId]);
+
+                // Confirmamos todos los cambios
+                $pdo->commit();
+
+            } else {
+                $pdo->rollBack(); // Si ya existe, no hacemos nada
+            }
+
+        } catch (Exception $e) {
+            $pdo->rollBack(); // Si hay error, deshacemos los inserts
+            throw new Exception("Error al crear usuario y clínica: " . $e->getMessage());
         }
 
         // 5. Crear el archivo database.php dinámicamente
@@ -155,7 +189,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <div class="install-card">
             <h4 class="text-center mb-1" style="color: #004AAD;">Configuración del Sistema</h4>
-            <p class="text-muted text-center small mb-4">Ingresa los datos de tu base de datos para comenzar.</p>
+            <div class="d-flex justify-content-center gap-2 mb-4 mt-3">
+                <div id="step-indicator-1" class="rounded-pill" style="width: 30px; height: 6px; background: #004AAD;">
+                </div>
+                <div id="step-indicator-2" class="rounded-pill" style="width: 30px; height: 6px; background: #e2e8f0;">
+                </div>
+            </div>
 
             <?php if ($mensaje): ?>
                 <div class="alert alert-<?php echo $tipo_alerta; ?> small" role="alert">
@@ -163,38 +202,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form method="POST">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label small fw-bold">Host</label>
-                        <input type="text" name="host" class="form-control form-control-sm" value="localhost" required>
+            <form method="POST" id="installForm">
+
+                <div id="step1">
+                    <p class="text-muted text-center small mb-4">Paso 1: Información de tu consultorio</p>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Nombre de la Clínica</label>
+                        <input type="text" name="clinic_name" class="form-control form-control-sm"
+                            placeholder="Ej. Clinica Plus" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label small fw-bold">Nombre Base de Datos</label>
-                        <input type="text" name="db_name" class="form-control form-control-sm" placeholder="plus_medico"
-                            required>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Dirección</label>
+                        <input type="text" name="clinic_address" class="form-control form-control-sm"
+                            placeholder="Calle Falsa 123, Ciudad" required>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small fw-bold">Usuario MySQL</label>
-                    <input type="text" name="user" class="form-control form-control-sm" value="root" required>
-                </div>
-                <div class="mb-4">
-                    <label class="form-label small fw-bold">Contraseña MySQL</label>
-                    <input type="password" name="pass" class="form-control form-control-sm"
-                        placeholder="En XAMPP suele ir vacío">
+
+                    <button type="button" class="btn btn-install w-100" onclick="nextStep()">Siguiente</button>
                 </div>
 
-                <div class="alert alert-info border-0 bg-light small">
-                    <i class="bi bi-info-circle me-2"></i> Se importará automáticamente el archivo
-                    <strong>database.sql</strong>.
-                </div>
+                <div id="step2" style="display: none;">
+                    <p class="text-muted text-center small mb-4">Paso 2: Conexión con el servidor</p>
 
-                <button type="submit" class="btn btn-install w-100">Finalizar Instalación</button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Host</label>
+                            <input type="text" name="host" class="form-control form-control-sm" value="localhost"
+                                required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Nombre DB</label>
+                            <input type="text" name="db_name" class="form-control form-control-sm"
+                                placeholder="plus_medico" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Usuario MySQL</label>
+                        <input type="text" name="user" class="form-control form-control-sm" value="root" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold">Contraseña MySQL</label>
+                        <input type="password" name="pass" class="form-control form-control-sm"
+                            placeholder="Vacío en XAMPP">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light border btn-sm w-50"
+                            onclick="prevStep()">Atrás</button>
+                        <button type="submit" class="btn btn-install btn-sm w-50">Enviar</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
+    <script>
+        function nextStep() {
+            const name = document.querySelector('input[name="clinic_name"]').value;
+            const address = document.querySelector('input[name="clinic_address"]').value;
 
+            if (!name || !address) {
+                alert("Por favor, completa los datos de la clínica.");
+                return;
+            }
+
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('step-indicator-2').style.background = '#004AAD';
+        }
+
+        function prevStep() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step-indicator-2').style.background = '#e2e8f0';
+        }
+    </script>
 </body>
 
 </html>

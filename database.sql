@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20),
     cellphone VARCHAR(20),
     role ENUM('user', 'doctor', 'admin') DEFAULT 'admin',
-    
+    clinic_id INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

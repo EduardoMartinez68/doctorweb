@@ -1,5 +1,6 @@
 <?php
 include '../../../middleware/authentication.php';
+include '../../../middleware/database.php';
 ?>
 
 <!DOCTYPE html>
