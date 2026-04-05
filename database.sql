@@ -1,4 +1,4 @@
-/*--------------------------------------USERS---------------------------------------------*/
+/* --------------------------------------USERS--------------------------------------------- */
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS payments (
     paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     received_by VARCHAR(150), -- nombre del encargado
     
-    signature JSON, -- coordenadas del canvas
+    signature LONGTEXT, -- coordenadas del canvas
     status ENUM('paid', 'pending', 'failed') DEFAULT 'paid',
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -265,12 +265,12 @@ CREATE TABLE IF NOT EXISTS medical_records (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
-    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
+    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
 
 
 
     /*--------------------------family data--------------------------*/
-    family_history JSON,
+    family_history LONGTEXT,
 
     /* -------------------- GINECO-OBSTÉTRICOS -------------------- */
     menarche_age INT,
@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS medical_records (
     ob_gyn_observations TEXT,
 
     /* -------------------- LABORAL (JSON) -------------------- */
-    occupational_history JSON,
+    occupational_history LONGTEXT,
     note_laboratory TEXT,
 
     /* -------------------- ANTECEDENTES PERSONALES -------------------- */
@@ -320,11 +320,11 @@ CREATE TABLE IF NOT EXISTS medical_records (
     lifestyle_diet ENUM('Balanceada','Regular','Deficiente'),
 
     /* -------------------- CHILDREN   -------------------- */
-    children JSON,
+    children LONGTEXT,
 
     /* -------------------- MEDICAL EXAM   -------------------- */
     -- JSON con todos los checkboxes
-    symptoms JSON,
+    symptoms LONGTEXT,
 
     -- Comentarios
     physical_exam_notes TEXT,
@@ -336,5 +336,5 @@ CREATE TABLE IF NOT EXISTS medical_records (
 
     -- Capacidad física
     safety_shoe_impediment BOOLEAN,
-    dominant_hand ENUM('right', 'left', 'ambidextrous'),
+    dominant_hand ENUM('right', 'left', 'ambidextrous')
 );
