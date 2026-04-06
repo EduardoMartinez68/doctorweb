@@ -2,7 +2,7 @@
 (esto es para crear el usuario admin)
 
 /-------------------------------------------------------------------------------------------------/
-Estamos usando boobstrap como UI. Estamos usando php como backend y mysql como base de datos. 
+Estamos usando boobstrap como UI y sweetalert2 para las notificaciones. Estamos usando php como backend y mysql como base de datos. 
 Asi me conecto a mi base de datos con mi archivo database.php:
 <?php
     $host = 'localhost';
@@ -63,28 +63,110 @@ $_SESSION['clinic_id']   = $user['id'];
 $_SESSION['user_name'] = $user['name'];
 $_SESSION['user_role'] = $user['role'];
 
-Me gustaria que me ayudes a crear el formulario para crear un paciente, deberas crear el formulario, la logica del backend , la notificacion si algo sale bien o mal.
-Esta es la tabla de los pacientes:
-CREATE TABLE IF NOT EXISTS patients (
-    /*ALL THIS INFORMATION BE ENCRYPTED EXCEPT THE <KEY_ID> BECAUSE THE USER CAN USE IT FOR SEARCHING*/
+Cuando te pida crear APIs estaran dentro de una carpeta llamada 'services' y para usarlas deberas llamarla asi:
+../../patients/services/search_patients.php
+
+Este es un ejemplo de una API:
+<?php
+include '../../../middleware/authentication.php'; // 🔥 IMPORTANTE
+include '../../../middleware/database.php';
+require_once '../../../utils/Encryption.php';
+
+header('Content-Type: application/json');
+
+$clinic_id = $_SESSION['clinic_id'];
+
+// INPUTS SEGUROS
+$page   = max(1, (int)($_GET['page'] ?? 1));
+$search = trim($_GET['search'] ?? '');
+
+$limit  = 20;
+$offset = ($page - 1) * $limit;
+
+// 🔍 QUERY DINÁMICA
+$params = [$clinic_id];
+$where  = "WHERE clinic_id = ?";
+
+if (!empty($search)) {
+    $where .= " AND key_id LIKE ?";
+    $params[] = "%$search%";
+}
+
+// 🔥 SOLO COLUMNAS NECESARIAS
+$sql = "
+    SELECT id, key_id, name, phone, cellphone, email, status, birth_date
+    FROM patients
+    $where
+    ORDER BY id DESC
+    LIMIT $limit OFFSET $offset
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$patients = $stmt->fetchAll();
+
+// COUNT
+$countSql = "SELECT COUNT(*) FROM patients $where";
+$countStmt = $pdo->prepare($countSql);
+$countStmt->execute($params);
+$total = (int)$countStmt->fetchColumn();
+
+// 🔐 DESENCRIPTACIÓN SEGURA
+function decryptSafe($value) {
+    try {
+        return $value ? Encryption::decrypt($value) : null;
+    } catch (Exception $e) {
+        return null; // evita romper la app
+    }
+}
+
+// 📦 FORMATEAR RESPUESTA
+$data = array_map(function($p) {
+    return [
+        'id'         => $p['id'],
+        'key_id'     => $p['key_id'],
+        'name'       => decryptSafe($p['name']),
+        'phone'      => decryptSafe($p['phone']),
+        'cellphone'  => decryptSafe($p['cellphone']),
+        'email'      => decryptSafe($p['email']),
+        'status'     => $p['status'],
+        'birth_date' => decryptSafe($p['birth_date']),
+    ];
+}, $patients);
+
+// 🚀 RESPUESTA FINAL
+echo json_encode([
+    'data'        => $data,
+    'total'       => $total,
+    'page'        => $page,
+    'per_page'    => $limit,
+    'total_pages' => ceil($total / $limit)
+]);
+
+y esto es un ejemplo de una etiqueta personalizada en el frontend para renderizar tablas dinamicas:
+<dynamic-table 
+    link="../../patients/services/search_patients.php"
+    columns="Nombre,Email,Teléfono"
+    keys="name,email,phone"
+    edit="../../patients/views/patient.php?id=">
+</dynamic-table>
+
+Ahora necesito que me ayudes a crear la API y el formulario para crear un nuevo servicio. Quiero que tambien crees una notificacion para indicar que se creo.
+Para que no sea muy pesado solo envia los datos con la API, si todo salio bien borra el formulario y muestra notificacion.
+
+Esta es la base de datos:
+CREATE TABLE IF NOT EXISTS services (
     id INT AUTO_INCREMENT PRIMARY KEY,
     clinic_id INT NOT NULL,
     
-    key_id VARCHAR(100) UNIQUE NOT NULL, -- could be a national ID, social security number, or a custom identifier
-    name TEXT NOT NULL,
-    phone TEXT,
-    cellphone TEXT,
-    email TEXT,
-    
-    birth_date DATE,
-    
-    address TEXT,
-    notes TEXT,
+    name VARCHAR(150) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    duration_minutes INT, -- optional for appointments
     
     status ENUM('active', 'inactive') DEFAULT 'active',
-    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
+    favorite BOOLEAN DEFAULT False, 
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
 );

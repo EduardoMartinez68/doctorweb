@@ -1,5 +1,6 @@
 <?php
 include '../../../middleware/authentication.php';
+include '../../../middleware/database.php';
 ?>
 
 <!DOCTYPE html>
@@ -7,7 +8,7 @@ include '../../../middleware/authentication.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ventas</title>
+    <title>Servicios</title>
     <?php
     include '../../../layouts/styles.php';
     ?>
@@ -18,14 +19,11 @@ include '../../../middleware/authentication.php';
     ?>
 
     <?php
-    include '../partials/sale/consulta.php';
+    include '../partials/update_services/form_update.php';
     ?>
 
     <?php
     include '../../../layouts/scripts.php';
     ?>
-    <script>
-        renderTabla();
-    </script>
 </body>
 </html>

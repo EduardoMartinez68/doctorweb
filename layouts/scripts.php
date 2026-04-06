@@ -1,4 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     class PopLateral extends HTMLElement {
         constructor() {
@@ -644,4 +646,284 @@ class DynamicSelector extends HTMLElement {
 }
 
 customElements.define('dynamic-selector', DynamicSelector);
+</script>
+<script>
+class DynamicTable extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+
+        this.page = 1;
+        this.search = '';
+        this.total_pages = 1;
+
+        this.columns = [];
+        this.keys = [];
+        this.link = '';
+        this.editLink = '';
+        this.addLink = '';
+    }
+
+    connectedCallback() {
+        this.columns = (this.getAttribute('columns') || '').split(',').map(c => c.trim());
+        this.keys = (this.getAttribute('keys') || '').split(',').map(k => k.trim());
+        this.link = this.getAttribute('link') || '';
+        this.editLink = this.getAttribute('edit') || '';
+        this.addLink = this.getAttribute('add') || '';
+
+        this.render();
+        this.fetchData();
+    }
+
+    getStyles() {
+        return `
+        <style>
+            :host {
+                display: block;
+                font-family: sans-serif;
+                --primary-color: #004AAD;
+                --hover-row: #f8fafc;
+                --border-color: #e2e8f0;
+            }
+
+            .container {
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+                background: white;
+            }
+
+            .header {
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+            }
+
+            .search-container {
+                flex-grow: 1;
+                max-width: 400px;
+            }
+
+            .search {
+                width: 100%;
+                padding: 10px 14px;
+                border: 1.5px solid var(--border-color);
+                border-radius: 8px;
+                font-size: 0.9rem;
+                transition: all 0.2s;
+                box-sizing: border-box;
+            }
+
+            .add-btn {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: filter 0.2s;
+                white-space: nowrap;
+            }
+
+            .add-btn:hover {
+                filter: brightness(1.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th {
+                background: #f8f9fa;
+                padding: 12px;
+                text-align: left;
+            }
+
+            td {
+                padding: 10px;
+                border-top: 1px solid #eee;
+            }
+
+            tr:hover td {
+                background: #f5f5f5;
+            }
+
+            .edit-btn {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .footer-actions {
+                padding: 15px 20px;
+                border-top: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .btn-pagination {
+                padding: 8px 16px;
+                border: 1px solid #ddd;
+                background: white;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+            .btn-pagination:disabled { opacity: 0.5; cursor: not-allowed; }
+        </style>
+        `;
+    }
+
+    render() {
+        const addButtonHtml = this.addLink 
+            ? `<button class="add-btn" id="addBtn">
+                <span>+</span> Agregar
+               </button>` 
+            : '';
+
+        this.shadowRoot.innerHTML = `
+            ${this.getStyles()}
+            <div class="container">
+                <div class="header">
+                    <div class="search-container">
+                        <input type="text" class="search" placeholder="Buscar registros..." id="searchInput">
+                    </div>
+                    ${addButtonHtml}
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr id="thead"></tr>
+                        </thead>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+
+                <div class="footer-actions">
+                    <span id="pageInfo">Pág. 1</span>
+                    <div>
+                        <button class="btn-pagination" id="prevBtn">Anterior</button>
+                        <button class="btn-pagination" id="nextBtn">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.renderHeaders();
+        this.setupEvents();
+    }
+
+    renderHeaders() {
+        const thead = this.shadowRoot.getElementById('thead');
+        thead.innerHTML = '';
+
+        this.columns.forEach(col => {
+            const th = document.createElement('th');
+            th.innerText = col;
+            thead.appendChild(th);
+        });
+
+        if (this.editLink) {
+            const th = document.createElement('th');
+            th.innerText = 'Acciones';
+            thead.appendChild(th);
+        }
+    }
+
+    setupEvents() {
+        const root = this.shadowRoot;
+
+        root.getElementById('prevBtn').onclick = () => this.changePage(-1);
+        root.getElementById('nextBtn').onclick = () => this.changePage(1);
+
+        //the button for add
+        const addBtn = root.getElementById('addBtn');
+        if (addBtn) {
+            addBtn.onclick = () => window.location.href = this.addLink;
+        }
+
+        let timeout;
+        root.getElementById('searchInput').oninput = (e) => {
+            this.search = e.target.value;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                this.page = 1;
+                this.fetchData();
+            }, 300);
+        };
+    }
+
+    async fetchData() {
+        if (!this.link) return;
+
+        try {
+            const res = await fetch(`${this.link}?page=${this.page}&search=${this.search}`);
+            const response = await res.json();
+
+            this.total_pages = response.total_pages || 1;
+
+            this.renderTable(response.data || []);
+            this.updatePagination();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    renderTable(data) {
+        const tbody = this.shadowRoot.getElementById('tbody');
+        tbody.innerHTML = '';
+
+        data.forEach(item => {
+            const tr = document.createElement('tr');
+
+            // columnas dinámicas
+            tr.innerHTML = this.keys.map(k => `<td>${item[k] ?? '-'}</td>`).join('');
+
+            // botón editar
+            if (this.editLink) {
+                const td = document.createElement('td');
+
+                const btn = document.createElement('button');
+                btn.className = 'edit-btn';
+                btn.innerText = 'Editar';
+
+                btn.onclick = () => {
+                    const url = `${this.editLink}${item.id}`;
+                    window.location.href = url;
+                };
+
+                td.appendChild(btn);
+                tr.appendChild(td);
+            }
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    updatePagination() {
+        const root = this.shadowRoot;
+
+        root.getElementById('pageInfo').innerText =
+            `Pág. ${this.page} de ${this.total_pages}`;
+
+        root.getElementById('prevBtn').disabled = this.page <= 1;
+        root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
+    }
+
+    changePage(step) {
+        this.page += step;
+        this.fetchData();
+    }
+}
+
+customElements.define('dynamic-table', DynamicTable);
 </script>

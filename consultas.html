@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --med-primary: #004AAD;
+            --med-primary-hover: #02377e;
+            --text-color-title: #38B6FF;
+            --med-bg: #F4F5FF;
+            --med-text: #334155;
+            --med-border: #e2e8f0;
+            --doctor-brand-color: #004AAD;
+            --med-primary-online: #004bad9a;
+        }
+
+        body {
+            background-color: var(--med-bg);
+            color: var(--med-text);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .text-title {
+            color: var(--med-primary);
+            font-weight: 600;
+        }
+
+        .card-custom {
+            background: #ffffff;
+            border: 1px solid var(--med-border);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .sub-card {
+            background: #f8fafc;
+            border: 1px dashed var(--med-border);
+            border-radius: 10px;
+        }
+
+        .form-control, .form-select {
+            border-color: var(--med-border);
+            border-radius: 8px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--text-color-title);
+            box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.15);
+        }
+
+        .btn-med {
+            background-color: var(--med-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+
+        .btn-med:hover {
+            background-color: var(--med-primary-hover);
+            color: white;
+        }
+
+        .badge-sub {
+            background-color: var(--med-bg);
+            color: var(--med-primary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <div class="d-flex align-items-center mb-4">
+                <div class="rounded-circle me-3" style="width: 15px; height: 15px; background-color: var(--med-primary);"></div>
+                <h2 class="text-title m-0">Nueva Consulta Médica</h2>
+            </div>
+
+            <form>
+                <div class="card card-custom p-4 mb-4">
+                    <h5 class="text-muted mb-3 fs-6 text-uppercase fw-bold">Información General</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Médico Tratante</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Selecciona un doctor...</option>
+                                <option value="1">Dr. Alejandro Magno</option>
+                                <option value="2">Dra. Beatriz Paredes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Paciente</label>
+                            <select class="form-select" required>
+                                <option value="" selected disabled>Selecciona un paciente...</option>
+                                <option value="1">Carlos Slim (Exp. 1042)</option>
+                                <option value="2">Diana Spencer (Exp. 1043)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom p-4 mb-4">
+                    <h5 class="text-muted mb-3 fs-6 text-uppercase fw-bold">Signos Vitales</h5>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">Peso (kg)</label>
+                            <input type="number" step="0.1" class="form-control" placeholder="0.0">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">Estatura (cm)</label>
+                            <input type="number" class="form-control" placeholder="0">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">Temp. (°C)</label>
+                            <input type="number" step="0.1" class="form-control" placeholder="36.5">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">Presión Art.</label>
+                            <input type="text" class="form-control" placeholder="120/80">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">F. Cardíaca</label>
+                            <input type="number" class="form-control" placeholder="LPM">
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <label class="form-label text-secondary small">SpO2 (%)</label>
+                            <input type="number" class="form-control" placeholder="98">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom p-4 mb-4">
+                    <h5 class="text-muted mb-3 fs-6 text-uppercase fw-bold">Evolución y Diagnóstico</h5>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Motivo de Consulta y Síntomas</label>
+                            <textarea class="form-control" rows="3" placeholder="Escribe el motivo o síntomas referidos..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Exploración Física</label>
+                            <textarea class="form-control" rows="3" placeholder="Hallazgos clínicos observados..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Diagnóstico</label>
+                            <textarea class="form-control" rows="2" placeholder="Impresión diagnóstica..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-custom p-4 mb-4">
+                    <h5 class="text-muted mb-3 fs-6 text-uppercase fw-bold">Módulos Vinculados</h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="sub-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="m-0 fw-bold text-title">💊 Receta Médica (Prescription)</h6>
+                                    <span class="badge badge-sub p-2">ID Generado Auto</span>
+                                </div>
+                                <label class="form-label small text-secondary">Indicaciones y medicamentos para el paciente</label>
+                                <textarea class="form-control" rows="4" placeholder="Ej: Paracetamol 500mg - Cada 8 horas por 5 días."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="sub-card p-3 h-100">
+                                <h6 class="m-0 fw-bold text-secondary mb-2">📅 Cita de Origen</h6>
+                                <select class="form-select">
+                                    <option value="" selected disabled>Vincular a una cita...</option>
+                                    <option value="101">Cita #101 - 10:30 AM (Hoy)</option>
+                                    <option value="102">Cita #102 - 11:30 AM (Hoy)</option>
+                                </select>
+                                <div class="form-text">Dejar en blanco si es una consulta espontánea.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="sub-card p-3 h-100">
+                                <h6 class="m-0 fw-bold text-secondary mb-2">💳 Nota de Venta / Folio</h6>
+                                <select class="form-select">
+                                    <option value="" selected disabled>Vincular a una venta...</option>
+                                    <option value="5001">Folio #5001 - Por Cobrar</option>
+                                    <option value="5002">Folio #5002 - Pagado</option>
+                                </select>
+                                <div class="form-text">Asigna el cobro generado por esta consulta.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mb-5">
+                    <button type="button" class="btn btn-light px-4 py-2 border">Guardar como Borrador</button>
+                    <button type="submit" class="btn btn-med px-4 py-2">Finalizar Consulta</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

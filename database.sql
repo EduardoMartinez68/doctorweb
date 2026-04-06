@@ -81,14 +81,14 @@ CREATE TABLE IF NOT EXISTS services (
     status ENUM('active', 'inactive') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
+    favorite BOOLEAN DEFAULT False, 
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS sales (
     id INT AUTO_INCREMENT PRIMARY KEY,
     
-    user_id INT NOT NULL,
+    create_by INT NOT NULL,
     clinic_id INT NOT NULL,
     patient_id INT,
     
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS sales (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (create_by) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE SET NULL
 );
@@ -152,7 +152,8 @@ CREATE TABLE IF NOT EXISTS payments (
 /*--------------------------------------APPOINTMENTS---------------------------------------------*/
 CREATE TABLE IF NOT EXISTS appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL, --this is the doctor of the appoint
+    create_by INT NOT NULL, --this is the user that create the appoint
     patient_id INT NOT NULL,
     clinic_id INT NOT NULL,
     service_id INT NOT NULL,
@@ -173,7 +174,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
 
-
+    FOREIGN KEY (create_by) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
@@ -184,14 +185,10 @@ CREATE TABLE IF NOT EXISTS appointments (
 /*--------------------------------------CLINIC---------------------------------------------*/
 CREATE TABLE IF NOT EXISTS prescriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    
-    user_id INT NOT NULL, -- doctor
     clinic_id INT NOT NULL,
     patient_id INT NOT NULL,
-    
-    appointment_id INT, -- opcional (si viene de una cita)
-    sale_id INT, -- opcional (si viene de una venta)
-    
+    create_by INT NOT NULL,
+
     diagnosis TEXT,
     general_instructions TEXT,
     
@@ -202,11 +199,9 @@ CREATE TABLE IF NOT EXISTS prescriptions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (create_by) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
-    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
-    FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE SET NULL,
-    FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE SET NULL
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS prescription_items (
@@ -226,6 +221,50 @@ CREATE TABLE IF NOT EXISTS prescription_items (
 );
 
 
+/*--------------------------------------medical consultation---------------------------------------------*/
+CREATE TABLE IF NOT EXIT medical_consultation(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    --this information is for save the relation of all the sections
+    doctor_id INT NOT NULL,
+    create_by INT NOT NULL,
+    clinic_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    appointment_id INT NOT NULL,
+    sale_id INT NOT NULL,
+    prescriptions_id INT NOT NULL,
+
+    --here we will to create the body of the consultation 
+    -- 1. Signos Vitales (Somatometría)
+    weight DECIMAL(5,2),           -- Peso en kg
+    height DECIMAL(5,2),           -- Estatura en cm/m
+    temperature DECIMAL(4,1),      -- Temperatura en °C
+    blood_pressure VARCHAR(20),    -- Ejemplo: "120/80"
+    heart_rate INT,                -- Frecuencia cardíaca (latidos por min)
+    respiratory_rate INT,          -- Frecuencia respiratoria
+    oxygen_saturation INT,         -- SpO2 (%)
+
+    -- 2. Cuerpo de la Consulta (Método SOAP)
+    reason_for_consultation TEXT,  -- Motivo de la consulta (Subjetivo)
+    symptoms TEXT,                 -- Síntomas referidos por el paciente
+    physical_exploration TEXT,     -- Hallazgos del médico (Objetivo)
+    medical_diagnosis TEXT,        -- Impresión diagnóstica (Análisis)
+    treatment_plan TEXT,           -- Indicaciones, dieta, cuidados (Plan)
+    internal_notes TEXT,           -- Notas que solo el doctor puede ver (opcional)
+
+    -- 3. Control y Trazabilidad
+    status ENUM('draft', 'completed', 'cancelled') DEFAULT 'completed',
+    consultation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (prescriptions_id) REFERENCES prescriptions(id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (create_by) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (appointment_id) REFERENCES appointments(id) ON DELETE SET NULL,
+    FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE SET NULL
+)
 
 /*--------------------------------------MEDICAL RECORDS---------------------------------------------*/
 CREATE TABLE IF NOT EXISTS medical_records (

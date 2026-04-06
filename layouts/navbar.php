@@ -35,6 +35,9 @@
                 <a class="nav-link nav-link-med" href="../../sales/views/home.php">Ventas</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link nav-link-med" href="../../services/views/home.php">Servicios</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Recetas</a>
             </li>
             <li class="nav-item">
@@ -186,6 +189,15 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="home.php">Inicio</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        Consultas
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="../../../apps/consultation/views/home.php">Ver mis consultas</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/consultation/views/form_consultation.php">Crear un Consulta</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">

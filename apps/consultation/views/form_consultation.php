@@ -18,7 +18,7 @@ include '../../../middleware/authentication.php';
     ?>
 
     <?php
-    include '../partials/sale/consulta.php';
+    include '../partials/form_consultation/consulta.php';
     ?>
 
     <?php

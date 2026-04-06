@@ -28,7 +28,12 @@
         font-family: 'Inter', sans-serif;
         color: var(--med-text);
     }
-
+    .text-primary, .card-title{
+        color: var(---med-primary);
+    }
+    .nav-item{
+        color: var(---med-primary);
+    }
     .form-container {
         width: 100%;
         margin: 10px auto;
