@@ -123,7 +123,13 @@
                     <div class="col">
                         <label class="fw-bold text-secondary">Paciente seleccionado:</label>
                         <div class="">
-                            <patient-selector name="patients_id"></patient-selector>
+                            <dynamic-selector 
+                                title="Seleccionar Paciente"
+                                link="../../patients/services/search_patients.php"
+                                columns="ID,Nombre,email,Teléfono"
+                                keys="key_id,name,email,cellphone"
+                                name="patients_id">
+                            </dynamic-selector>
                         </div>
                     </div>
                 </div>
