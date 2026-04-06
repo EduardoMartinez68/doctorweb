@@ -86,6 +86,7 @@
     }
 </script>
 <script>
+
 class PlusPop extends HTMLElement {
     constructor() {
         super();
@@ -297,4 +298,323 @@ function closePop(name) {
         // Carga inicial
         fetchData();
     }
+</script>
+
+
+<script>
+class PatientSelector extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+        this.page = 1;
+        this.search = '';
+        this.selected = null;
+        this.total_pages = 1;
+    }
+
+    connectedCallback() {
+        this.render();
+    }
+
+    // Estilos consistentes con PlusPop
+    getStyles() {
+        return `
+        <style>
+            :host {
+                display: block;
+                font-family: sans-serif;
+                --primary-color: var(--med-primary, #004AAD);
+                --hover-color: #f0f4f8;
+                --selected-color: #e2e8f0;
+            }
+
+            /* Estilo del selector (el "botón" disparador) */
+            .selector-display {
+                border: 1px solid #ccc;
+                padding: 12px;
+                border-radius: 6px;
+                cursor: pointer;
+                background: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: border-color 0.2s;
+            }
+
+            .selector-display:hover {
+                border-color: var(--primary-color);
+            }
+
+            /* Estructura del Modal (Copiada de PlusPop) */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0; left: 0;
+                width: 100vw; height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-container {
+                background: white;
+                width: 85%;
+                max-width: 900px;
+                height: 80vh;
+                border-radius: 8px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            }
+
+            .modal-header {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 12px 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-header h3 { margin: 0; font-size: 1.1rem; }
+
+            .close-btn {
+                background: transparent; border: none; color: white;
+                font-size: 1.5rem; cursor: pointer;
+            }
+
+            .modal-content {
+                padding: 20px;
+                overflow-y: auto;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            /* Buscador y Tabla */
+            .search-input {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 1rem;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+            th {
+                text-align: left;
+                background: #f8f9fa;
+                padding: 12px;
+                border-bottom: 2px solid #dee2e6;
+            }
+
+            td {
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+            }
+
+            tr:hover td { background: var(--hover-color); }
+            tr.selected td { background: var(--selected-color); font-weight: bold; }
+
+            /* Paginación y Botón Aceptar */
+            .footer-actions {
+                padding: 15px 20px;
+                border-top: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .btn-pagination {
+                padding: 8px 16px;
+                border: 1px solid #ddd;
+                background: white;
+                cursor: pointer;
+                border-radius: 4px;
+            }
+
+            .btn-pagination:disabled { opacity: 0.5; cursor: not-allowed; }
+
+            .btn-accept {
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 10px 25px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .btn-accept:hover { filter: brightness(1.1); }
+        </style>
+        `;
+    }
+
+    render() {
+        const name = this.getAttribute('name') || 'patient_id';
+        const label = this.getAttribute('label') || 'Seleccionar paciente';
+
+        this.shadowRoot.innerHTML = `
+            ${this.getStyles()}
+            
+            <div class="patient-selector-wrapper">
+                <input type="hidden" name="${name}" id="hiddenInput">
+
+                <div class="selector-display" id="openBtn">
+                    <span id="selectedText">${label}</span>
+                    <span>▼</span>
+                </div>
+
+                <div class="modal-overlay" id="modalOverlay">
+                    <div class="modal-container">
+                        <div class="modal-header">
+                            <h3>Seleccionar Paciente</h3>
+                            <button class="close-btn" id="closeBtn">&times;</button>
+                        </div>
+                        
+                        <div class="modal-content">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre o ID...">
+                            
+                            <div style="flex-grow: 1; overflow-y: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Key ID</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Celular</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="footer-actions">
+                            <div>
+                                <button class="btn-pagination" id="prevBtn">Anterior</button>
+                                <span id="pageInfo">Pág. 1</span>
+                                <button class="btn-pagination" id="nextBtn">Siguiente</button>
+                            </div>
+                            <button class="btn-accept" id="acceptBtn">Confirmar Selección</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        const root = this.shadowRoot;
+
+        root.getElementById('openBtn').onclick = () => this.openModal();
+        root.getElementById('closeBtn').onclick = () => this.closeModal();
+        root.getElementById('prevBtn').onclick = () => this.changePage(-1);
+        root.getElementById('nextBtn').onclick = () => this.changePage(1);
+        root.getElementById('acceptBtn').onclick = () => this.acceptSelection();
+
+        root.getElementById('searchInput').oninput = (e) => {
+            this.search = e.target.value;
+            this.page = 1;
+            this.fetchPatients();
+        };
+
+        // Cerrar al hacer clic fuera del contenedor
+        root.getElementById('modalOverlay').onclick = (e) => {
+            if (e.target.id === 'modalOverlay') this.closeModal();
+        };
+    }
+
+    openModal() {
+        this.shadowRoot.getElementById('modalOverlay').style.display = 'flex';
+        this.fetchPatients();
+    }
+
+    closeModal() {
+        this.shadowRoot.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    async fetchPatients() {
+        try {
+            const res = await fetch(`../../patients/services/search_patients.php?page=${this.page}&search=${this.search}`);
+            const response = await res.json();
+            
+            this.total_pages = response.total_pages;
+            this.renderTable(response.data);
+            this.updatePaginationUI();
+        } catch (error) {
+            console.error("Error cargando pacientes:", error);
+        }
+    }
+
+    renderTable(data) {
+        const tbody = this.shadowRoot.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        data.forEach(patient => {
+            const tr = document.createElement('tr');
+            if (this.selected && this.selected.id === patient.id) tr.classList.add('selected');
+
+            tr.innerHTML = `
+                <td>${patient.key_id}</td>
+                <td>${patient.name}</td>
+                <td>${patient.email || '-'}</td>
+                <td>${patient.cellphone || '-'}</td>
+            `;
+
+            tr.onclick = () => {
+                this.shadowRoot.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+                tr.classList.add('selected');
+                this.selected = patient;
+            };
+            tbody.appendChild(tr);
+        });
+    }
+
+    updatePaginationUI() {
+        const root = this.shadowRoot;
+        root.getElementById('pageInfo').innerText = `Pág. ${this.page} de ${this.total_pages || 1}`;
+        root.getElementById('prevBtn').disabled = this.page <= 1;
+        root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
+    }
+
+    changePage(step) {
+        this.page += step;
+        this.fetchPatients();
+    }
+
+    acceptSelection() {
+        if (!this.selected) {
+            alert('Por favor, selecciona un paciente');
+            return;
+        }
+
+        this.shadowRoot.getElementById('hiddenInput').value = this.selected.id;
+        this.shadowRoot.getElementById('selectedText').innerText = `${this.selected.name} (${this.selected.key_id})`;
+        
+        // Disparar evento personalizado por si el padre quiere enterarse
+        this.dispatchEvent(new CustomEvent('patient-selected', {
+            detail: this.selected,
+            bubbles: true,
+            composed: true
+        }));
+
+        this.closeModal();
+    }
+}
+
+customElements.define('patient-selector', PatientSelector);
 </script>

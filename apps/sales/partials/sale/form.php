@@ -123,10 +123,7 @@
                     <div class="col">
                         <label class="fw-bold text-secondary">Paciente seleccionado:</label>
                         <div class="">
-                            <button type="button" class="btn-input-bootstrap" onclick="openPop('modalUsuario')">
-                                <span class="fw-medium text-dark">Juan Pérez García</span>
-                                <i class="bi bi-person-check-fill text-primary"></i>
-                            </button>
+                            <patient-selector name="patients_id"></patient-selector>
                         </div>
                     </div>
                 </div>
@@ -235,3 +232,4 @@
         </div>
     </div>
 </div>
+
