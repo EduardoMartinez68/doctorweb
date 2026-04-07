@@ -49,10 +49,10 @@
 
 
 <script>
-let id = new URLSearchParams(window.location.search).get('id');
+let patient_id = new URLSearchParams(window.location.search).get('id');
 
-async function update_data_patient_pop_flash(patient_id){
-    id=patient_id;
+async function update_data_patient_pop_flash(id){
+    patient_id=id;
     await loadPatient();
     openPop('pop_view_patient_flash');
 }
@@ -60,7 +60,7 @@ async function update_data_patient_pop_flash(patient_id){
 
 // 🔄 Cargar paciente
 async function loadPatient() {
-    const res = await fetch(`../../patients/services/get_patient.php?id=${id}`);
+    const res = await fetch(`../../patients/services/get_patient.php?id=${patient_id}`);
     const data = await res.json();
 
     if (!data.success) return;
@@ -89,20 +89,27 @@ async function loadPatient() {
 btnUpdate.addEventListener('click', async () => {
     const patientForm=document.getElementById('patientFormUpdate')
     const formData = new FormData(patientForm);
-
+    
     const res = await fetch('../../patients/services/update_patient.php', {
         method: 'POST',
         body: formData
     });
 
     const data = await res.json();
-
-    closePop('pop_view_patient_flash'); //close the pop if the user is create a patient from other view 
     if (data.success) {
+        closePop('pop_view_patient_flash'); //close the pop if the user is create a patient from other view 
         Swal.fire({
             icon: 'success',
             title: 'Actualizado',
-            text: data.message,
+            text: data.message || '',text: data.message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo crear el paciente',
+            text: data.message || '',
             timer: 2000,
             showConfirmButton: false
         });
@@ -111,7 +118,6 @@ btnUpdate.addEventListener('click', async () => {
 
 // 🗑 eliminar
 btnDelete.addEventListener('click', async () => {
-
     const confirm = await Swal.fire({
         title: '¿Eliminar paciente?',
         icon: 'warning',
@@ -121,7 +127,7 @@ btnDelete.addEventListener('click', async () => {
     if (!confirm.isConfirmed) return;
 
     const formData = new FormData();
-    formData.append('id', id);
+    formData.append('id', patient_id);
     formData.append('action', 'delete');
 
     const res = await fetch('../../patients/services/toggle_patient_status.php', {
@@ -134,6 +140,14 @@ btnDelete.addEventListener('click', async () => {
     if (data.success) {
         Swal.fire('Eliminado', '', 'success');
         loadPatient(); // 🔄 recargar UI
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo eliminar el paciente',
+            text: data.message || '',
+            timer: 2000,
+            showConfirmButton: false
+        });
     }
 });
 
@@ -141,7 +155,7 @@ btnDelete.addEventListener('click', async () => {
 btnRestore.addEventListener('click', async () => {
 
     const formData = new FormData();
-    formData.append('id', id);
+    formData.append('id', patient_id);
     formData.append('action', 'restore');
 
     const res = await fetch('../../patients/services/toggle_patient_status.php', {
@@ -154,6 +168,14 @@ btnRestore.addEventListener('click', async () => {
     if (data.success) {
         Swal.fire('Restaurado', '', 'success');
         location.reload();
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo restaurar el paciente',
+            text: data.message || '',
+            timer: 2000,
+            showConfirmButton: false
+        });
     }
 });
 

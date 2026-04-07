@@ -87,12 +87,20 @@ serviceForm.addEventListener('submit', async (e) => {
     });
 
     const data = await res.json();
-    closePop('pop_services_view');
     if (data.success) {
+        closePop('pop_services_view');
         Swal.fire({
             icon: 'success',
             title: 'Actualizado',
             text: 'Servicio actualizado correctamente',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo actualizar el servicio',
+            text: data.message || '',
             timer: 2000,
             showConfirmButton: false
         });
@@ -124,6 +132,14 @@ btnDelete.addEventListener('click', async () => {
     if (data.success) {
         Swal.fire('Eliminado', '', 'success');
         loadService();
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo Eliminar el servicio',
+            text: data.message || '',
+            timer: 2000,
+            showConfirmButton: false
+        });
     }
 });
 
@@ -144,6 +160,14 @@ btnRestore.addEventListener('click', async () => {
     if (data.success) {
         Swal.fire('Restaurado', '', 'success');
         location.reload();
+    }else{
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo restaurar el servicio',
+            text: data.message || '',
+            timer: 2000,
+            showConfirmButton: false
+        });
     }
 });
 
