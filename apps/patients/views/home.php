@@ -44,8 +44,8 @@ include '../../../middleware/database.php';
             link="../../patients/services/search_patients.php"
             columns="Nombre,Email,Teléfono"
             keys="name,email,phone"
-            edit="../../patients/views/patient.php?id="
-            add="../../patients/views/create.php">
+            edit="../../patients/views/view_patient.php?id="
+            add="../../patients/views/add_patient_flash.php">
         </dynamic-table>
     </div>
     
