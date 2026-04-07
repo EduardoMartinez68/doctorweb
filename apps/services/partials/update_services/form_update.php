@@ -1,237 +1,151 @@
-<?php
-include '../../../middleware/authentication.php';
-include '../../../middleware/database.php';
+<div class="container mt-4">
 
-$clinic_id = $_SESSION['clinic_id'];
+    <h4>Servicio</h4>
 
-// 🛑 VALIDAR ID DEL LINK
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    <form id="serviceForm">
+        <input type="hidden" name="id" id="id">
 
-if ($id <= 0) {
-    die('ID inválido');
-}
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Nombre" required>
+            </div>
 
-// 🔍 OBTENER SERVICIO SOLO SI ES DE LA CLÍNICA
-$stmt = $pdo->prepare("
-    SELECT id, name, description, price, duration_minutes, status
-    FROM services
-    WHERE id = ? AND clinic_id = ?
-    LIMIT 1
-");
+            <div class="col-md-6 mb-2">
+                <input type="number" step="0.01" name="price" id="price" class="form-control" placeholder="Precio" required>
+            </div>
 
-$stmt->execute([$id, $clinic_id]);
-$service = $stmt->fetch();
+            <div class="col-md-6 mb-2">
+                <input type="number" name="duration_minutes" id="duration_minutes" class="form-control" placeholder="Duración (min)">
+            </div>
 
-// 🛑 SEGURIDAD
-if (!$service) {
-    die('Servicio no encontrado o sin permisos');
-}
-?>
+            <div class="col-md-6 mb-2 d-flex align-items-center">
+                <input type="checkbox" id="favorite" name="favorite" class="form-check-input me-2">
+                <label for="favorite">Favorito</label>
+            </div>
 
-
-
-<form id="formService">
-
-    <!-- ID oculto -->
-    <input type="hidden" name="id" value="<?= $service['id'] ?>">
-
-    <!-- Nombre -->
-    <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input 
-            type="text" 
-            class="form-control" 
-            name="name"
-            value="<?= htmlspecialchars($service['name']) ?>"
-            <?= $service['status'] === 'inactive' ? 'disabled' : '' ?>
-            required
-        >
-    </div>
-
-    <!-- Descripción -->
-    <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea 
-            class="form-control" 
-            name="description"
-            <?= $service['status'] === 'inactive' ? 'disabled' : '' ?>
-        ><?= htmlspecialchars($service['description'] ?? '') ?></textarea>
-    </div>
-
-    <!-- Precio y duración -->
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Precio</label>
-            <input 
-                type="number" 
-                step="0.01" 
-                class="form-control" 
-                name="price"
-                value="<?= htmlspecialchars($service['price']) ?>"
-                <?= $service['status'] === 'inactive' ? 'disabled' : '' ?>
-                required
-            >
+            <div class="col-md-12 mb-2">
+                <textarea name="description" id="description" class="form-control" placeholder="Descripción"></textarea>
+            </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Duración (minutos)</label>
-            <input 
-                type="number" 
-                class="form-control" 
-                name="duration_minutes"
-                value="<?= htmlspecialchars($service['duration_minutes'] ?? '') ?>"
-                <?= $service['status'] === 'inactive' ? 'disabled' : '' ?>
-            >
-        </div>
-    </div>
+        <button type="submit" class="btn btn-success" id="btnUpdate">Actualizar</button>
+        <button type="button" class="btn btn-danger" id="btnDelete">Eliminar</button>
+        <button type="button" class="btn btn-warning d-none" id="btnRestore">Restaurar</button>
 
-    <!-- Botones -->
-    <?php if ($service['status'] === 'active'): ?>
-
-        <button type="submit" class="btn btn-primary w-100 mb-2" id="btnSave">
-            Guardar Cambios
-        </button>
-
-        <button type="button" class="btn btn-danger w-100" id="btnDelete">
-            Eliminar Servicio
-        </button>
-
-    <?php else: ?>
-
-        <button type="button" class="btn btn-success w-100" id="btnRestore">
-            Restaurar Servicio
-        </button>
-
-    <?php endif; ?>
-
-</form>
-
-
+    </form>
+</div>
 <script>
-const form = document.getElementById('formService');
-const btnDelete = document.getElementById('btnDelete');
-const btnRestore = document.getElementById('btnRestore');
+let service_id = new URLSearchParams(window.location.search).get('id');
 
-// 🔥 STATUS REAL DESDE PHP
-let currentStatus = "<?= $service['status'] ?>";
-
-
-// 🚀 ACTUALIZAR
-if (form) {
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        if (currentStatus === 'inactive') {
-            Swal.fire('Bloqueado', 'Debes restaurar el servicio primero', 'warning');
-            return;
-        }
-
-        const formData = new FormData(form);
-
-        const res = await fetch('../../services/services/update_service.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Actualizado',
-                text: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            });
-        } else {
-            Swal.fire('Error', data.message, 'error');
-        }
-    });
+async function pop_services_view(id){
+    service_id=id;
+    await loadService();
+    openPop('pop_services_view');
 }
 
 
-// 🗑️ ELIMINAR
-if (btnDelete) {
-    btnDelete.addEventListener('click', async () => {
+// 🔄 cargar servicio
+async function loadService() {
+    const res = await fetch(`../../services/services/get_service.php?id=${service_id}`);
+    const data = await res.json();
 
-        const result = await Swal.fire({
-            title: '¿Deseas eliminar este servicio?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        });
+    if (!data.success) return;
 
-        if (!result.isConfirmed) return;
+    const s = data.data;
+    console.log(s)
+    document.getElementById('id').value = s.id;
+    document.getElementById('name').value = s.name;
+    document.getElementById('price').value = s.price;
+    document.getElementById('duration_minutes').value = s.duration_minutes ?? '';
+    document.getElementById('description').value = s.description ?? '';
+    document.getElementById('favorite').checked = s.favorite == 1;
 
-        const formData = new FormData();
-        formData.append('id', <?= $service['id'] ?>);
+    // 🎯 estado UI
+    if (s.status === 'inactive') {
+        document.querySelectorAll('#serviceForm input, #serviceForm textarea').forEach(el => el.disabled = true);
 
-        const res = await fetch('../../services/services/toggle_service_status.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-
-            Swal.fire({
-                icon: 'success',
-                title: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            });
-
-            // 🔄 recargar para reflejar estado
-            setTimeout(() => location.reload(), 1500);
-
-        } else {
-            Swal.fire('Error', data.message, 'error');
-        }
-    });
+        btnUpdate.classList.add('d-none');
+        btnDelete.classList.add('d-none');
+        btnRestore.classList.remove('d-none');
+    } else {
+        btnRestore.classList.add('d-none');
+    }
 }
 
+// 💾 actualizar
+serviceForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-// ♻️ RESTAURAR
-if (btnRestore) {
-    btnRestore.addEventListener('click', async () => {
+    const formData = new FormData(serviceForm);
 
-        const result = await Swal.fire({
-            title: '¿Deseas restaurar este servicio?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, restaurar',
-            cancelButtonText: 'Cancelar'
-        });
+    // checkbox fix
+    formData.set('favorite', document.getElementById('favorite').checked ? 1 : 0);
 
-        if (!result.isConfirmed) return;
-
-        const formData = new FormData();
-        formData.append('id', <?= $service['id'] ?>);
-
-        const res = await fetch('../../services/services/toggle_service_status.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const data = await res.json();
-
-        if (data.success) {
-
-            Swal.fire({
-                icon: 'success',
-                title: data.message,
-                timer: 1500,
-                showConfirmButton: false
-            });
-
-            // 🔄 recargar para habilitar edición
-            setTimeout(() => location.reload(), 1500);
-
-        } else {
-            Swal.fire('Error', data.message, 'error');
-        }
+    const res = await fetch('../../services/services/update_service.php', {
+        method: 'POST',
+        body: formData
     });
-}
+
+    const data = await res.json();
+    closePop('pop_services_view');
+    if (data.success) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Actualizado',
+            text: 'Servicio actualizado correctamente',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+});
+
+// 🗑 eliminar
+btnDelete.addEventListener('click', async () => {
+
+    const confirm = await Swal.fire({
+        title: '¿Eliminar servicio?',
+        icon: 'warning',
+        showCancelButton: true
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    const formData = new FormData();
+    formData.append('id', service_id);
+    formData.append('action', 'delete');
+
+    const res = await fetch('../../services/services/toggle_service_status.php', {
+        method: 'POST',
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        Swal.fire('Eliminado', '', 'success');
+        loadService();
+    }
+});
+
+// ♻ restaurar
+btnRestore.addEventListener('click', async () => {
+
+    const formData = new FormData();
+    formData.append('id', service_id);
+    formData.append('action', 'restore');
+
+    const res = await fetch('../../services/services/toggle_service_status.php', {
+        method: 'POST',
+        body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        Swal.fire('Restaurado', '', 'success');
+        location.reload();
+    }
+});
+
+loadService();
 </script>

@@ -52,7 +52,7 @@
             });
 
             const data = await res.json();
-
+            closePop('pop_services_add');
             if (data.success) {
 
                 // ✅ Notificación éxito

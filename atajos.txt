@@ -7,3 +7,15 @@
 include '../../../apps/patients/partials/pop_add_patient_flash.php';
 include '../../../apps/patients/partials/pop_view_patient_flash.php';
 ?>  
+
+-----------AGREGAR SERVICIOS-----------------
+<dynamic-selector title="Selecciona un Servicio" link="../../services/services/search_services.php"
+    columns="Nombre,Descripcion,Precio,Favorito"
+    keys="name,description,price,favorite"
+    name="service_id"
+    add="openPop('pop_services_add')" edit="pop_services_view">
+</dynamic-selector>
+<?php
+include '../../../apps/services/partials/pop_services_add.php';
+include '../../../apps/services/partials/pop_services_view.php';
+?>  
