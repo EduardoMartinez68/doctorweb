@@ -465,7 +465,20 @@
                 cursor: pointer;
                 font-weight: bold;
             }
+            .edit-btn {
+                background: none;
+                border: none;
+                color: var(--primary-color);
+                cursor: pointer;
+                font-size: 1.1rem;
+                padding: 5px;
+                border-radius: 4px;
+                transition: background 0.2s;
+            }
 
+            .edit-btn:hover {
+                background: rgba(0, 74, 173, 0.1);
+            }
             .btn-accept:hover { filter: brightness(1.1); }
 
             .add-btn {
@@ -570,7 +583,7 @@
         }
 
         render() {
-           const addButtonHtml = this.addLink
+            const addButtonHtml = this.addLink
                 ? `<button class="add-btn" id="addBtn">
                 <span>+</span> Agregar
                </button>`
@@ -648,6 +661,13 @@
                 th.innerText = col;
                 head.appendChild(th);
             });
+
+            if (this.editLink) {
+                const th = document.createElement('th');
+                th.innerText = 'Acciones';
+                th.style.textAlign = 'center';
+                head.appendChild(th);
+            }
         }
 
         setupEvents() {
@@ -667,11 +687,11 @@
                     // 1. Verificamos si el string termina en ")" (parece una función)
                     // O si existe como función global en el objeto window
                     if (this.addLink.includes('(') || typeof window[this.addLink] === 'function') {
-                        
+
                         // Opción A: Ejecutar el string como código (si envías parámetros)
                         // Usamos una función anónima para evaluarlo de forma segura
                         new Function(this.addLink)();
-                        
+
                     } else {
                         // 2. Si no parece función, lo tratamos como URL
                         window.location.href = this.addLink;
@@ -731,25 +751,70 @@
 
             data.forEach(item => {
                 const tr = document.createElement('tr');
-
                 if (this.selected && this.selected.id === item.id) {
                     tr.classList.add('selected');
                 }
 
-                tr.innerHTML = this.keys.map(key => {
-                    return `<td>${item[key] ?? '-'}</td>`;
-                }).join('');
+                // Celdas de datos
+                let html = this.keys.map(key => `<td>${item[key] ?? '-'}</td>`).join('');
 
-                tr.onclick = () => {
+                // Celda de edición (si aplica)
+                if (this.editLink) {
+                    html += `
+                <td style="text-align: center;">
+                    <button class="edit-btn" data-id="${item.id}" title="Editar">
+                        <i class="fi fi-rs-pencil"></i>
+                    </button>
+                </td>`;
+                }
+
+                tr.innerHTML = html;
+
+                // Evento para seleccionar la fila
+                tr.onclick = (e) => {
+                    // Si el click fue en el botón de editar, no seleccionamos la fila
+                    if (e.target.closest('.edit-btn')) return;
+
                     this.shadowRoot.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
                     tr.classList.add('selected');
                     this.selected = item;
                 };
 
+                // Evento para el botón de editar
+                if (this.editLink) {
+                    const btn = tr.querySelector('.edit-btn');
+                    btn.onclick = (e) => {
+                        e.stopPropagation(); // Evita que se dispare el onclick del tr
+                        this.handleEdit(item.id);
+                    };
+                }
+
                 tbody.appendChild(tr);
             });
         }
 
+        handleEdit(id) {
+            if (!this.editLink) return;
+
+            // Si es una función (ej: update_data_patient_pop_flash)
+            if (typeof window[this.editLink] === 'function') {
+                window[this.editLink](id);
+            }
+            // Si contiene paréntesis (ej: openPop('view', ...))
+            else if (this.editLink.includes('(')) {
+                // Reemplazamos o inyectamos el ID si es necesario, 
+                // o simplemente ejecutamos el string asumiendo que la función sabe qué hacer
+                new Function('id', this.editLink)(id);
+                // Nota: Si el string es "openPop('flash')", esto lo ejecutará tal cual.
+                // Si quieres que pase el ID automáticamente podrías usar: 
+                // new Function('id', `window.${this.editLink.replace(')', `, ${id})`)`)(id);
+            }
+            // Si es una URL
+            else {
+                window.location.href = `${this.editLink}?id=${id}`;
+            }
+        }
+        
         updatePaginationUI() {
             const root = this.shadowRoot;
 

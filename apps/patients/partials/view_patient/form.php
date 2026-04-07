@@ -3,7 +3,7 @@
 
     <h4>Paciente</h4>
 
-    <form id="patientForm">
+    <form id="patientFormUpdate">
         <input type="hidden" name="id" id="id">
 
         <div class="row">
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success" id="btnUpdate">Actualizar</button>
+        <button type="button" class="btn btn-success" id="btnUpdate">Actualizar</button>
         <button type="button" class="btn btn-danger" id="btnDelete">Eliminar</button>
         <button type="button" class="btn btn-warning d-none" id="btnRestore">Restaurar</button>
 
@@ -85,9 +85,9 @@ async function loadPatient() {
 }
 
 // 💾 actualizar
-patientForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
 
+btnUpdate.addEventListener('click', async () => {
+    const patientForm=document.getElementById('patientFormUpdate')
     const formData = new FormData(patientForm);
 
     const res = await fetch('../../patients/services/update_patient.php', {

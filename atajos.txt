@@ -1,8 +1,9 @@
 -----------AGREGAR PACIENTES-----------------
 <dynamic-selector title="Seleccionar Paciente" link="../../patients/services/search_patients.php"
     columns="ID,Nombre,email,Teléfono" keys="key_id,name,email,cellphone" name="patients_id"
-    add="openPop('pop_add_patient_flash')">
+    add="openPop('pop_add_patient_flash')" edit="update_data_patient_pop_flash">
 </dynamic-selector>
 <?php
 include '../../../apps/patients/partials/pop_add_patient_flash.php';
+include '../../../apps/patients/partials/pop_view_patient_flash.php';
 ?>  
