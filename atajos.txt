@@ -1,3 +1,11 @@
+/middleware/setup_admin.php 
+(esto es para crear el usuario admin)
+
+-----------------------------------------------------------
+Crear el usuario admin
+Crear el cliente 'Publico en General' 
+
+
 -----------AGREGAR PACIENTES-----------------
 <dynamic-selector title="Seleccionar Paciente" link="../../patients/services/search_patients.php"
     columns="ID,Nombre,email,Teléfono" keys="key_id,name,email,cellphone" name="patients_id"

@@ -131,6 +131,16 @@
     .btn-search{
         height: 100%;
     }
+
+/* El contenedor de SweetAlert2 debe ser el más alto de todos */
+.swal2-container {
+    z-index: 99999 !important;
+}
+
+/* Opcional: Asegúrate de que el backdrop (fondo oscuro) también cubra todo */
+.swal2-backdrop-show {
+    z-index: 99998 !important;
+}
 </style>
 
 <style>

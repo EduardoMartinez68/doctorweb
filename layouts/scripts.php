@@ -304,6 +304,7 @@
 
 
 <script>
+
     class DynamicSelector extends HTMLElement {
         constructor() {
             super();
@@ -327,6 +328,15 @@
             this.link = this.getAttribute('link') || '';
             this.editLink = this.getAttribute('edit') || '';
             this.addLink = this.getAttribute('add') || '';
+
+            const name = this.getAttribute('name') || 'item_id';
+            let externalInput = this.querySelector(`input[name="${name}"]`);
+            if (!externalInput) {
+                externalInput = document.createElement('input');
+                externalInput.type = 'hidden';
+                externalInput.name = name;
+                this.appendChild(externalInput); // Se agrega al DOM real (Light DOM)
+            }
 
             this.render();
         }
@@ -594,7 +604,6 @@
             const title = this.getAttribute('title') || 'Seleccionar';
 
             this.shadowRoot.innerHTML = `
-            <input type="hidden" name="${name}" id="hiddenInput">
             ${this.getStyles()}
 
             <div class="selector-display" id="openBtn">
@@ -832,13 +841,18 @@
 
         acceptSelection() {
             const hidden = this.shadowRoot.getElementById('hiddenInput');
+            const idValue = this.selected.id ?? '';
 
             if (!this.selected) {
                 hidden.value = '';
                 return;
             }
 
-            hidden.value = this.selected.id ?? '';
+            const name = this.getAttribute('name');
+            const externalInput = this.querySelector(`input[name="${name}"]`);
+            if (externalInput) {
+                externalInput.value = idValue;
+            }
 
             // 🔥 texto visible basado en columnas (ej: Nombre - Email)
             const text = this.keys

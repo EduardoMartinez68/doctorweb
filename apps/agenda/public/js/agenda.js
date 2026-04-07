@@ -70,15 +70,20 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
             const options = { weekday: 'long', day: 'numeric', month: 'long' };
             const fechaAmigable = info.start.toLocaleDateString('es-ES', options);
             const horaAmigable = info.allDay ? "" : ` a las ${info.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            
-            //document.getElementById('displayDate').innerText = fechaAmigable + horaAmigable;
-            
-            // Limpiar campos antes de mostrar
-            //document.getElementById('newTitle').value = "";
-            //document.getElementById('newPaciente').value = "";
-            //document.getElementById('newDoctor').value = "";
-            
-            createModal.show();
+            // Tu variable original
+            const start = new Date(info.start);
+
+            // 1. Obtener la fecha en formato YYYY-MM-DD (útil para bases de datos)
+            const fecha = start.toISOString().split('T')[0]; 
+
+            // 2. Obtener la hora de inicio (HH:mm)
+            const start_time = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            // 3. Crear end_time sumando una hora
+            const end = new Date(start); 
+            end.setHours(start.getHours() + 1); // Sumamos 1 hora exacta
+            const end_time = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            open_pop_appointments(fecha, start_time, end_time)
     },
     // Acción al hacer clic en un evento
     eventClick: function (info) {
@@ -90,7 +95,8 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
                 <p><strong>Hora:</strong> ${info.event.start.toLocaleTimeString()}</p>
                 <p><strong>Consultorio:</strong> ${props.consultorio}</p>
             `;
-        eventModal.show();
+        //eventModal.show();
+        openPop('pop_appointments')
     }
 });
 
