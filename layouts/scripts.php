@@ -660,15 +660,23 @@
             root.getElementById('acceptBtn').onclick = () => this.acceptSelection();
 
             //the button for add
+            this.addLink = this.getAttribute('add') || '';
             const addBtn = root.getElementById('addBtn');
-            if (addBtn) {
-                if (typeof this.addLink === 'function') {
-                    // Si es una función, la ejecutamos
-                    addBtn.onclick = () => this.addLink();
-                } else if (typeof this.addLink === 'string') {
-                    // Si es un string, lo tratamos como URL
-                    addBtn.onclick = () => window.location.href = this.addLink;
-                }
+            if (addBtn && this.addLink) {
+                addBtn.onclick = () => {
+                    // 1. Verificamos si el string termina en ")" (parece una función)
+                    // O si existe como función global en el objeto window
+                    if (this.addLink.includes('(') || typeof window[this.addLink] === 'function') {
+                        
+                        // Opción A: Ejecutar el string como código (si envías parámetros)
+                        // Usamos una función anónima para evaluarlo de forma segura
+                        new Function(this.addLink)();
+                        
+                    } else {
+                        // 2. Si no parece función, lo tratamos como URL
+                        window.location.href = this.addLink;
+                    }
+                };
             }
 
             //this is the btn for rechange the table

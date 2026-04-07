@@ -58,6 +58,7 @@ document.getElementById('patientForm').addEventListener('submit', async function
         if (data.success) {
             // ✅ LIMPIAR FORMULARIO
             form.reset();
+            closePop('pop_add_patient_flash'); //close the pop if the user is create a patient from other view 
 
             // 🔔 NOTIFICACIÓN
             Swal.fire({

@@ -38,6 +38,9 @@ include '../../../middleware/database.php';
     include '../partials/menu.php';
     ?>
 
+
+
+
     <br>
     <div class="container">
         <dynamic-table 

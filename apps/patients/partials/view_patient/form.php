@@ -49,7 +49,14 @@
 
 
 <script>
-const id = new URLSearchParams(window.location.search).get('id');
+let id = new URLSearchParams(window.location.search).get('id');
+
+async function update_data_patient_pop_flash(patient_id){
+    id=patient_id;
+    await loadPatient();
+    openPop('pop_view_patient_flash');
+}
+
 
 // 🔄 Cargar paciente
 async function loadPatient() {
@@ -90,6 +97,7 @@ patientForm.addEventListener('submit', async (e) => {
 
     const data = await res.json();
 
+    closePop('pop_view_patient_flash'); //close the pop if the user is create a patient from other view 
     if (data.success) {
         Swal.fire({
             icon: 'success',
