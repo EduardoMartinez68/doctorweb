@@ -89,36 +89,36 @@
 </script>
 <script>
 
-class PlusPop extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
-    }
+    class PlusPop extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+        }
 
-    static get observedAttributes() {
-        return ['width', 'height', 'title'];
-    }
+        static get observedAttributes() {
+            return ['width', 'height', 'title'];
+        }
 
-    connectedCallback() {
-        this.render();
-    }
+        connectedCallback() {
+            this.render();
+        }
 
-    // Método para cerrar el popup
-    close() {
-        this.style.display = 'none';
-    }
+        // Método para cerrar el popup
+        close() {
+            this.style.display = 'none';
+        }
 
-    // Método para abrir el popup
-    open() {
-        this.style.display = 'flex';
-    }
+        // Método para abrir el popup
+        open() {
+            this.style.display = 'flex';
+        }
 
-    render() {
-        const title = this.getAttribute('title') || 'Información';
-        const width = this.getAttribute('width') || '80%';
-        const height = this.getAttribute('height') || 'auto';
+        render() {
+            const title = this.getAttribute('title') || 'Información';
+            const width = this.getAttribute('width') || '80%';
+            const height = this.getAttribute('height') || 'auto';
 
-        this.shadowRoot.innerHTML = `
+            this.shadowRoot.innerHTML = `
         <style>
             :host {
                 display: none; /* Oculto por defecto */
@@ -186,25 +186,25 @@ class PlusPop extends HTMLElement {
         </div>
         `;
 
-        this.shadowRoot.getElementById('closeBtn').onclick = () => this.close();
+            this.shadowRoot.getElementById('closeBtn').onclick = () => this.close();
+        }
     }
-}
 
-// Registrar el componente
-customElements.define('plus-pop', PlusPop);
+    // Registrar el componente
+    customElements.define('plus-pop', PlusPop);
 
-/**
- * Funciones globales para controlar los popups por su atributo 'name'
- */
-function openPop(name) {
-    const pop = document.querySelector(`plus-pop[name="${name}"]`);
-    if (pop) pop.open();
-}
+    /**
+     * Funciones globales para controlar los popups por su atributo 'name'
+     */
+    function openPop(name) {
+        const pop = document.querySelector(`plus-pop[name="${name}"]`);
+        if (pop) pop.open();
+    }
 
-function closePop(name) {
-    const pop = document.querySelector(`plus-pop[name="${name}"]`);
-    if (pop) pop.close();
-}
+    function closePop(name) {
+        const pop = document.querySelector(`plus-pop[name="${name}"]`);
+        if (pop) pop.close();
+    }
 </script>
 <script>
     /**
@@ -304,31 +304,35 @@ function closePop(name) {
 
 
 <script>
-class DynamicSelector extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+    class DynamicSelector extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
 
-        this.page = 1;
-        this.search = '';
-        this.selected = null;
-        this.total_pages = 1;
+            this.page = 1;
+            this.search = '';
+            this.selected = null;
+            this.total_pages = 1;
 
-        this.columns = [];
-        this.keys = [];
-        this.link = '';
-    }
+            this.columns = [];
+            this.keys = [];
+            this.link = '';
+            this.editLink = '';
+            this.addLink = '';
+        }
 
-    connectedCallback() {
-        this.columns = (this.getAttribute('columns') || '').split(',').map(c => c.trim());
-        this.keys = (this.getAttribute('keys') || '').split(',').map(k => k.trim());
-        this.link = this.getAttribute('link') || '';
+        connectedCallback() {
+            this.columns = (this.getAttribute('columns') || '').split(',').map(c => c.trim());
+            this.keys = (this.getAttribute('keys') || '').split(',').map(k => k.trim());
+            this.link = this.getAttribute('link') || '';
+            this.editLink = this.getAttribute('edit') || '';
+            this.addLink = this.getAttribute('add') || '';
 
-        this.render();
-    }
+            this.render();
+        }
 
-    getStyles() {
-        return `
+        getStyles() {
+            return `
         <style>
             :host {
                 display: block;
@@ -336,6 +340,7 @@ class DynamicSelector extends HTMLElement {
                 --primary-color: var(--med-primary, #004AAD);
                 --hover-color: #f0f4f8;
                 --selected-color: #e2e8f0;
+                --add-color: #2b642e;
             }
 
             .selector-display {
@@ -462,19 +467,122 @@ class DynamicSelector extends HTMLElement {
             }
 
             .btn-accept:hover { filter: brightness(1.1); }
+
+            .add-btn {
+                background: var(--add-color);
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: filter 0.2s;
+                white-space: nowrap;
+            }
+
+            .add-btn:hover {
+                filter: brightness(1.1);
+            }
+            /*-----------------------------*/
+
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 1.25rem;
+                background-color: #ffffff;
+                border-radius: 12px 12px 0 0;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            /* Contenedor del buscador con icono */
+            .search-wrapper {
+                position: relative;
+                flex: 1;
+                width: 100%;
+            }
+
+            .search-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                pointer-events: none;
+            }
+
+            .search-input {
+                width: 100%;
+                padding: 10px 12px 10px 40px;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                transition: all 0.2s ease;
+                outline: none;
+            }
+
+            .search-input:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            /* Grupo de botones */
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            /* Estilo para el botón de recarga */
+            .recharge-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                background-color: #f8fafc;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                color: #64748b;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .recharge-btn:hover {
+                background-color: #f1f5f9;
+                color: #1e293b;
+                border-color: #94a3b8;
+            }
+
+            .recharge-btn i {
+                font-size: 1rem;
+                display: inline-block;
+                transform: translateY(2px);
+            }
         </style>
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
         `;
-    }
+        }
 
-    render() {
-        const name = this.getAttribute('name') || 'item_id';
-        const label = this.getAttribute('label') || 'Seleccionar';
-        const title = this.getAttribute('title') || 'Seleccionar';
+        render() {
+           const addButtonHtml = this.addLink
+                ? `<button class="add-btn" id="addBtn">
+                <span>+</span> Agregar
+               </button>`
+                : '';
 
-        this.shadowRoot.innerHTML = `
-            ${this.getStyles()}
-            
+            const name = this.getAttribute('name') || 'item_id';
+            const label = this.getAttribute('label') || 'Seleccionar';
+            const title = this.getAttribute('title') || 'Seleccionar';
+
+            this.shadowRoot.innerHTML = `
             <input type="hidden" name="${name}" id="hiddenInput">
+            ${this.getStyles()}
 
             <div class="selector-display" id="openBtn">
                 <span id="selectedText">${label}</span>
@@ -489,7 +597,21 @@ class DynamicSelector extends HTMLElement {
                     </div>
                     
                     <div class="modal-content">
-                        <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
+                        <div class="header">
+                            <div class="search-wrapper">
+                                <i class="fi fi-rs-search search-icon"></i>
+                                <input type="text" class="search-input" id="searchInput" placeholder="Buscar...">
+                            </div>
+                            
+                            <div class="header-actions">
+                                ${addButtonHtml}
+                                <button class="recharge-btn" id="rechargeBtn" title="Recargar">
+                                    <i class="fi fi-rs-rotate-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        
                         
                         <div style="flex-grow: 1; overflow-y: auto;">
                             <table>
@@ -513,175 +635,196 @@ class DynamicSelector extends HTMLElement {
             </div>
         `;
 
-        this.renderHeaders();
-        this.setupEvents();
-    }
-
-    renderHeaders() {
-        const head = this.shadowRoot.getElementById('tableHead');
-        head.innerHTML = '';
-
-        this.columns.forEach(col => {
-            const th = document.createElement('th');
-            th.innerText = col;
-            head.appendChild(th);
-        });
-    }
-
-    setupEvents() {
-        const root = this.shadowRoot;
-
-        root.getElementById('openBtn').onclick = () => this.openModal();
-        root.getElementById('closeBtn').onclick = () => this.closeModal();
-        root.getElementById('prevBtn').onclick = () => this.changePage(-1);
-        root.getElementById('nextBtn').onclick = () => this.changePage(1);
-        root.getElementById('acceptBtn').onclick = () => this.acceptSelection();
-
-        let timeout;
-        root.getElementById('searchInput').oninput = (e) => {
-            this.search=e.target.value;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                //this.search = e.target.value;
-                this.page = 1;
-                this.fetchData();
-            }, 300);
-        };
-
-        root.getElementById('modalOverlay').onclick = (e) => {
-            if (e.target.id === 'modalOverlay') this.closeModal();
-        };
-    }
-
-    openModal() {
-        this.shadowRoot.getElementById('modalOverlay').style.display = 'flex';
-        this.fetchData();
-    }
-
-    closeModal() {
-        this.shadowRoot.getElementById('modalOverlay').style.display = 'none';
-    }
-
-    async fetchData() {
-        if (!this.link) return;
-
-        try {
-            const res = await fetch(`${this.link}?page=${this.page}&search=${this.search}`);
-            const response = await res.json();
-            this.total_pages = response.total_pages || 1;
-
-            this.renderTable(response.data || []);
-            this.updatePaginationUI();
-        } catch (err) {
-            console.error('Error cargando datos:', err);
+            this.renderHeaders();
+            this.setupEvents();
         }
-    }
 
-    renderTable(data) {
-        const tbody = this.shadowRoot.getElementById('tableBody');
-        tbody.innerHTML = '';
+        renderHeaders() {
+            const head = this.shadowRoot.getElementById('tableHead');
+            head.innerHTML = '';
 
-        data.forEach(item => {
-            const tr = document.createElement('tr');
+            this.columns.forEach(col => {
+                const th = document.createElement('th');
+                th.innerText = col;
+                head.appendChild(th);
+            });
+        }
 
-            if (this.selected && this.selected.id === item.id) {
-                tr.classList.add('selected');
+        setupEvents() {
+            const root = this.shadowRoot;
+
+            root.getElementById('openBtn').onclick = () => this.openModal();
+            root.getElementById('closeBtn').onclick = () => this.closeModal();
+            root.getElementById('prevBtn').onclick = () => this.changePage(-1);
+            root.getElementById('nextBtn').onclick = () => this.changePage(1);
+            root.getElementById('acceptBtn').onclick = () => this.acceptSelection();
+
+            //the button for add
+            const addBtn = root.getElementById('addBtn');
+            if (addBtn) {
+                if (typeof this.addLink === 'function') {
+                    // Si es una función, la ejecutamos
+                    addBtn.onclick = () => this.addLink();
+                } else if (typeof this.addLink === 'string') {
+                    // Si es un string, lo tratamos como URL
+                    addBtn.onclick = () => window.location.href = this.addLink;
+                }
             }
 
-            tr.innerHTML = this.keys.map(key => {
-                return `<td>${item[key] ?? '-'}</td>`;
-            }).join('');
+            //this is the btn for rechange the table
+            const rechargeBtn = root.getElementById('rechargeBtn');
+            if (rechargeBtn) {
+                rechargeBtn.onclick = () => this.fetchData();
+            }
 
-            tr.onclick = () => {
-                this.shadowRoot.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
-                tr.classList.add('selected');
-                this.selected = item;
+            let timeout;
+            root.getElementById('searchInput').oninput = (e) => {
+                this.search = e.target.value;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    //this.search = e.target.value;
+                    this.page = 1;
+                    this.fetchData();
+                }, 300);
             };
 
-            tbody.appendChild(tr);
-        });
-    }
-
-    updatePaginationUI() {
-        const root = this.shadowRoot;
-
-        root.getElementById('pageInfo').innerText =
-            `Pág. ${this.page} de ${this.total_pages}`;
-
-        root.getElementById('prevBtn').disabled = this.page <= 1;
-        root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
-    }
-
-    changePage(step) {
-        this.page += step;
-        this.fetchData();
-    }
-
-    acceptSelection() {
-        const hidden = this.shadowRoot.getElementById('hiddenInput');
-
-        if (!this.selected) {
-            hidden.value = '';
-            return;
+            root.getElementById('modalOverlay').onclick = (e) => {
+                if (e.target.id === 'modalOverlay') this.closeModal();
+            };
         }
 
-        hidden.value = this.selected.id ?? '';
+        openModal() {
+            this.shadowRoot.getElementById('modalOverlay').style.display = 'flex';
+            this.fetchData();
+        }
 
-        // 🔥 texto visible basado en columnas (ej: Nombre - Email)
-        const text = this.keys
-            .map(k => this.selected[k])
-            .filter(Boolean)
-            .join(' - ');
+        closeModal() {
+            this.shadowRoot.getElementById('modalOverlay').style.display = 'none';
+        }
 
-        this.shadowRoot.getElementById('selectedText').innerText = text;
+        async fetchData() {
+            if (!this.link) return;
 
-        this.dispatchEvent(new CustomEvent('item-selected', {
-            detail: this.selected,
-            bubbles: true,
-            composed: true
-        }));
+            try {
+                const res = await fetch(`${this.link}?page=${this.page}&search=${this.search}`);
+                const response = await res.json();
+                this.total_pages = response.total_pages || 1;
 
-        this.closeModal();
+                this.renderTable(response.data || []);
+                this.updatePaginationUI();
+            } catch (err) {
+                console.error('Error cargando datos:', err);
+            }
+        }
+
+        renderTable(data) {
+            const tbody = this.shadowRoot.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+
+                if (this.selected && this.selected.id === item.id) {
+                    tr.classList.add('selected');
+                }
+
+                tr.innerHTML = this.keys.map(key => {
+                    return `<td>${item[key] ?? '-'}</td>`;
+                }).join('');
+
+                tr.onclick = () => {
+                    this.shadowRoot.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+                    tr.classList.add('selected');
+                    this.selected = item;
+                };
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        updatePaginationUI() {
+            const root = this.shadowRoot;
+
+            root.getElementById('pageInfo').innerText =
+                `Pág. ${this.page} de ${this.total_pages}`;
+
+            root.getElementById('prevBtn').disabled = this.page <= 1;
+            root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
+        }
+
+        changePage(step) {
+            this.page += step;
+            this.fetchData();
+        }
+
+        acceptSelection() {
+            const hidden = this.shadowRoot.getElementById('hiddenInput');
+
+            if (!this.selected) {
+                hidden.value = '';
+                return;
+            }
+
+            hidden.value = this.selected.id ?? '';
+
+            // 🔥 texto visible basado en columnas (ej: Nombre - Email)
+            const text = this.keys
+                .map(k => this.selected[k])
+                .filter(Boolean)
+                .join(' - ');
+
+            this.shadowRoot.getElementById('selectedText').innerText = text;
+
+            this.dispatchEvent(new CustomEvent('item-selected', {
+                detail: this.selected,
+                bubbles: true,
+                composed: true
+            }));
+
+            this.closeModal();
+        }
     }
-}
 
-customElements.define('dynamic-selector', DynamicSelector);
+    customElements.define('dynamic-selector', DynamicSelector);
 </script>
+
+
 <script>
-class DynamicTable extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: 'open' });
+    class DynamicTable extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
 
-        this.page = 1;
-        this.search = '';
-        this.total_pages = 1;
+            this.page = 1;
+            this.search = '';
+            this.total_pages = 1;
 
-        this.columns = [];
-        this.keys = [];
-        this.link = '';
-        this.editLink = '';
-        this.addLink = '';
-    }
+            this.columns = [];
+            this.keys = [];
+            this.link = '';
+            this.editLink = '';
+            this.addLink = '';
+        }
 
-    connectedCallback() {
-        this.columns = (this.getAttribute('columns') || '').split(',').map(c => c.trim());
-        this.keys = (this.getAttribute('keys') || '').split(',').map(k => k.trim());
-        this.link = this.getAttribute('link') || '';
-        this.editLink = this.getAttribute('edit') || '';
-        this.addLink = this.getAttribute('add') || '';
+        connectedCallback() {
+            this.columns = (this.getAttribute('columns') || '').split(',').map(c => c.trim());
+            this.keys = (this.getAttribute('keys') || '').split(',').map(k => k.trim());
+            this.link = this.getAttribute('link') || '';
+            this.editLink = this.getAttribute('edit') || '';
+            this.addLink = this.getAttribute('add') || '';
 
-        this.render();
-        this.fetchData();
-    }
+            this.render();
+            this.fetchData();
+        }
 
-    getStyles() {
-        return `
+        getStyles() {
+            return `
         <style>
             :host {
                 display: block;
                 font-family: sans-serif;
                 --primary-color: #004AAD;
+                --add-color: #2b642e;
                 --hover-row: #f8fafc;
                 --border-color: #e2e8f0;
             }
@@ -693,28 +836,38 @@ class DynamicTable extends HTMLElement {
                 background: white;
             }
 
-            .header {
-                padding: 15px;
-                border-bottom: 1px solid #eee;
+            .recharge-btn{
+                background: var(--primary-color);
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: filter 0.2s;
+                white-space: nowrap;
             }
 
+            .search-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                pointer-events: none;
+            }
+                
             .search-container {
                 flex-grow: 1;
                 max-width: 400px;
             }
 
-            .search {
-                width: 100%;
-                padding: 10px 14px;
-                border: 1.5px solid var(--border-color);
-                border-radius: 8px;
-                font-size: 0.9rem;
-                transition: all 0.2s;
-                box-sizing: border-box;
-            }
-
             .add-btn {
-                background: var(--primary-color);
+                background: var(--add-color);
                 color: white;
                 border: none;
                 padding: 10px 18px;
@@ -778,25 +931,111 @@ class DynamicTable extends HTMLElement {
             }
 
             .btn-pagination:disabled { opacity: 0.5; cursor: not-allowed; }
+
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 1.25rem;
+                background-color: #ffffff;
+                border-radius: 12px 12px 0 0;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            /* Contenedor del buscador con icono */
+            .search-wrapper {
+                position: relative;
+                flex: 1;
+                width: 100%;
+            }
+
+            .search-icon {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                pointer-events: none;
+            }
+
+            .search-input {
+                width: 50%;
+                padding: 10px 12px 10px 40px;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                transition: all 0.2s ease;
+                outline: none;
+            }
+
+            .search-input:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            /* Grupo de botones */
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            /* Estilo para el botón de recarga */
+            .recharge-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                background-color: #f8fafc;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
+                color: #64748b;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .recharge-btn:hover {
+                background-color: #f1f5f9;
+                color: #1e293b;
+                border-color: #94a3b8;
+            }
+
+            .recharge-btn i {
+                font-size: 1rem;
+                display: inline-block;
+                transform: translateY(2px);
+            }
+
+
         </style>
+        <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-straight/css/uicons-regular-straight.css'>
         `;
-    }
+        }
 
-    render() {
-        const addButtonHtml = this.addLink 
-            ? `<button class="add-btn" id="addBtn">
+        render() {
+            const addButtonHtml = this.addLink
+                ? `<button class="add-btn" id="addBtn">
                 <span>+</span> Agregar
-               </button>` 
-            : '';
+               </button>`
+                : '';
 
-        this.shadowRoot.innerHTML = `
+            this.shadowRoot.innerHTML = `
             ${this.getStyles()}
             <div class="container">
                 <div class="header">
-                    <div class="search-container">
-                        <input type="text" class="search" placeholder="Buscar registros..." id="searchInput">
+                    <div class="search-wrapper">
+                        <i class="fi fi-rs-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Buscar registros..." id="searchInput">
                     </div>
-                    ${addButtonHtml}
+                    
+                    <div class="header-actions">
+                        ${addButtonHtml}
+                        <button class="recharge-btn" id="rechargeBtn" title="Recargar">
+                            <i class="fi fi-rs-rotate-right"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div style="overflow-x: auto;">
@@ -818,112 +1057,125 @@ class DynamicTable extends HTMLElement {
             </div>
         `;
 
-        this.renderHeaders();
-        this.setupEvents();
-    }
-
-    renderHeaders() {
-        const thead = this.shadowRoot.getElementById('thead');
-        thead.innerHTML = '';
-
-        this.columns.forEach(col => {
-            const th = document.createElement('th');
-            th.innerText = col;
-            thead.appendChild(th);
-        });
-
-        if (this.editLink) {
-            const th = document.createElement('th');
-            th.innerText = 'Acciones';
-            thead.appendChild(th);
-        }
-    }
-
-    setupEvents() {
-        const root = this.shadowRoot;
-
-        root.getElementById('prevBtn').onclick = () => this.changePage(-1);
-        root.getElementById('nextBtn').onclick = () => this.changePage(1);
-
-        //the button for add
-        const addBtn = root.getElementById('addBtn');
-        if (addBtn) {
-            addBtn.onclick = () => window.location.href = this.addLink;
+            this.renderHeaders();
+            this.setupEvents();
         }
 
-        let timeout;
-        root.getElementById('searchInput').oninput = (e) => {
-            this.search = e.target.value;
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                this.page = 1;
-                this.fetchData();
-            }, 300);
-        };
-    }
+        renderHeaders() {
+            const thead = this.shadowRoot.getElementById('thead');
+            thead.innerHTML = '';
 
-    async fetchData() {
-        if (!this.link) return;
+            this.columns.forEach(col => {
+                const th = document.createElement('th');
+                th.innerText = col;
+                thead.appendChild(th);
+            });
 
-        try {
-            const res = await fetch(`${this.link}?page=${this.page}&search=${this.search}`);
-            const response = await res.json();
-
-            this.total_pages = response.total_pages || 1;
-
-            this.renderTable(response.data || []);
-            this.updatePagination();
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    renderTable(data) {
-        const tbody = this.shadowRoot.getElementById('tbody');
-        tbody.innerHTML = '';
-
-        data.forEach(item => {
-            const tr = document.createElement('tr');
-
-            // columnas dinámicas
-            tr.innerHTML = this.keys.map(k => `<td>${item[k] ?? '-'}</td>`).join('');
-
-            // botón editar
             if (this.editLink) {
-                const td = document.createElement('td');
+                const th = document.createElement('th');
+                th.innerText = 'Acciones';
+                thead.appendChild(th);
+            }
+        }
 
-                const btn = document.createElement('button');
-                btn.className = 'edit-btn';
-                btn.innerText = 'Editar';
+        setupEvents() {
+            const root = this.shadowRoot;
 
-                btn.onclick = () => {
-                    const url = `${this.editLink}${item.id}`;
-                    window.location.href = url;
-                };
+            root.getElementById('prevBtn').onclick = () => this.changePage(-1);
+            root.getElementById('nextBtn').onclick = () => this.changePage(1);
 
-                td.appendChild(btn);
-                tr.appendChild(td);
+            //the button for add
+            const addBtn = root.getElementById('addBtn');
+            if (addBtn) {
+                if (typeof this.addLink === 'function') {
+                    // Si es una función, la ejecutamos
+                    addBtn.onclick = () => this.addLink();
+                } else if (typeof this.addLink === 'string') {
+                    // Si es un string, lo tratamos como URL
+                    addBtn.onclick = () => window.location.href = this.addLink;
+                }
             }
 
-            tbody.appendChild(tr);
-        });
+            //this is the btn for rechange the table
+            const rechargeBtn = root.getElementById('rechargeBtn');
+            if (rechargeBtn) {
+                rechargeBtn.onclick = () => this.fetchData();
+            }
+
+
+            let timeout;
+            root.getElementById('searchInput').oninput = (e) => {
+                this.search = e.target.value;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    this.page = 1;
+                    this.fetchData();
+                }, 300);
+            };
+        }
+
+        async fetchData() {
+            if (!this.link) return;
+
+            try {
+                const res = await fetch(`${this.link}?page=${this.page}&search=${this.search}`);
+                const response = await res.json();
+
+                this.total_pages = response.total_pages || 1;
+
+                this.renderTable(response.data || []);
+                this.updatePagination();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        renderTable(data) {
+            const tbody = this.shadowRoot.getElementById('tbody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+
+                // columnas dinámicas
+                tr.innerHTML = this.keys.map(k => `<td>${item[k] ?? '-'}</td>`).join('');
+
+                // botón editar
+                if (this.editLink) {
+                    const td = document.createElement('td');
+
+                    const btn = document.createElement('button');
+                    btn.className = 'edit-btn';
+                    btn.innerText = 'Editar';
+
+                    btn.onclick = () => {
+                        const url = `${this.editLink}${item.id}`;
+                        window.location.href = url;
+                    };
+
+                    td.appendChild(btn);
+                    tr.appendChild(td);
+                }
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        updatePagination() {
+            const root = this.shadowRoot;
+
+            root.getElementById('pageInfo').innerText =
+                `Pág. ${this.page} de ${this.total_pages}`;
+
+            root.getElementById('prevBtn').disabled = this.page <= 1;
+            root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
+        }
+
+        changePage(step) {
+            this.page += step;
+            this.fetchData();
+        }
     }
 
-    updatePagination() {
-        const root = this.shadowRoot;
-
-        root.getElementById('pageInfo').innerText =
-            `Pág. ${this.page} de ${this.total_pages}`;
-
-        root.getElementById('prevBtn').disabled = this.page <= 1;
-        root.getElementById('nextBtn').disabled = this.page >= this.total_pages;
-    }
-
-    changePage(step) {
-        this.page += step;
-        this.fetchData();
-    }
-}
-
-customElements.define('dynamic-table', DynamicTable);
+    customElements.define('dynamic-table', DynamicTable);
 </script>

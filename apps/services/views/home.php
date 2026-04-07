@@ -19,6 +19,7 @@ include '../../../middleware/database.php';
     ?>
 
     <div class="container">
+        <br>
         <dynamic-table 
             link="../../services/services/search_services.php"
             columns="Nombre,Descripcion,Precio,Favorito"

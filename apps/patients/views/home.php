@@ -38,14 +38,16 @@ include '../../../middleware/database.php';
     include '../partials/menu.php';
     ?>
 
-
-    <dynamic-table 
-        link="../../patients/services/search_patients.php"
-        columns="Nombre,Email,Teléfono"
-        keys="name,email,phone"
-        edit="../../patients/views/patient.php?id="
-        add="../../patients/views/create.php">
-    </dynamic-table>
+    <br>
+    <div class="container">
+        <dynamic-table 
+            link="../../patients/services/search_patients.php"
+            columns="Nombre,Email,Teléfono"
+            keys="name,email,phone"
+            edit="../../patients/views/patient.php?id="
+            add="../../patients/views/create.php">
+        </dynamic-table>
+    </div>
     
 
     <?php

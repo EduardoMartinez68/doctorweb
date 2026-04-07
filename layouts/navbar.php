@@ -215,7 +215,9 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="../../../apps/patients/views/home.php">ver mis Pacientes</a></li>
                         <li><a class="dropdown-item" href="../../../apps/patients/views/create.php">Crear Paciente Rapido</a></li>
+                        <!---
                         <li><a class="dropdown-item" onclick="open_pop_lateral('popPaciente')">Crear Paciente Rapido</a></li>
+                        ---->
                         <li><a class="dropdown-item" href="../../../apps/patients/views/medical-record.php">Crear expediente Paciente</a></li>
                     </ul>
                 </li>

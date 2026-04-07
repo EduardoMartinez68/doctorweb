@@ -50,6 +50,7 @@ $countStmt = $pdo->prepare($countSql);
 $countStmt->execute($params);
 $total = (int)$countStmt->fetchColumn();
 
+
 // 📦 FORMATEAR RESPUESTA
 $data = array_map(function($s) {
     return [

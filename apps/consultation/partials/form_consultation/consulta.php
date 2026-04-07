@@ -101,7 +101,8 @@
             <div class="col-md-6">
                 <label class="form-label fw-bold">Médico Tratante</label>
                 <dynamic-selector title="Seleccionar Paciente" link="../../patients/services/search_patients.php"
-                    columns="ID,Nombre,email,Teléfono" keys="key_id,name,email,cellphone" name="patients_id">
+                    columns="ID,Nombre,email,Teléfono" keys="key_id,name,email,cellphone" name="patients_id"
+                    add="../../patients/services/add_patients.php">
                 </dynamic-selector>
             </div>
             <div class="col-md-6">
