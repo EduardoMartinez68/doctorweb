@@ -10,9 +10,9 @@ $clinic_id = $_SESSION['clinic_id'];
 // INPUTS SEGUROS
 $page   = max(1, (int)($_GET['page'] ?? 1));
 $search = trim($_GET['search'] ?? '');
-$status = $_GET['status'] ?? 'active';
+$status = $_GET['status'] ?? 'inactive';
 if (empty($status)) {
-    $status = 'active';
+    $status = 'inactive';
 }
 
 $limit  = 20;
