@@ -53,7 +53,7 @@
                 <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Permisos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../config/views/home.php">Configuraciones</a>
+                <a class="nav-link nav-link-med" href="../../settings/views/home.php">Configuraciones</a>
             </li>
             <li class="nav-item border-top mt-3 pt-3">
                 <a class="nav-link nav-link-med text-danger" href="../../../middleware/logout.php"><i class="bi bi-box-arrow-right"></i>
