@@ -137,7 +137,9 @@
                                     id="serviceSelector"
                                     link="../../services/services/search_services.php"
                                     columns="Nombre,Precio"
-                                    keys="name,price">
+                                    keys="name,price"
+                                    add="openPop('pop_services_add')" edit="pop_services_view"
+                                    >
                                 </dynamic-selector>
                             </div>
 
@@ -205,7 +207,10 @@
 </div>
 
 <?php include '../../../layouts/scripts.php'; ?>
-
+<?php
+include '../../../apps/services/partials/pop_services_add.php';
+include '../../../apps/services/partials/pop_services_view.php';
+?>  
 <script>
 let items = [];
 let saleCreated = false;

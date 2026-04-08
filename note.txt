@@ -155,9 +155,4 @@ y esto es un ejemplo de una etiqueta personalizada en el frontend para renderiza
     edit="../../patients/views/patient.php?id=">
 </dynamic-selector>
 
-Ahora necesito que me ayudes a crear la API y el formulario para crear una nueva venta. Quiero que tambien crees una notificacion para indicar que se creo.
-Para que no sea muy pesado solo envia los datos con la API, si todo salio bien borra el formulario y muestra notificacion.
-
-Necesito que crees el formulario para crear una venta. Crea un <dynamic-selector> que solicite a 'services' conexion a la API 'search_services.php' para mostrar todos los serivicos y seleccionar el que necesite.
-Una vez seleccionado quiero que se agregue a la tabla de los items de ventas para realizar la venta. Quiero que pueda agregar cuantos quiera. En la tabla existira 'nombre, descripcion, precio, descuento,total, acciones' y el usuario podra editar descuento y precio si quiere.
-El total se calculara cada vez que se haga una modificacion en la tabla. Una vez con todo listo el usuario podra darle clic al boton de crear venta y se creara la venta. Cuando la venta sea creada cambia el boton de 'crear venta' por el de imprimir para que se pueda imprimir la documentacion de la venta y todos los inputs de la tabla se bloquearan para evitar edicion. 
+Ahora necesito que me ayudes a crear la API para el dashboard done voy obtener lo siguiente 'ventas del dia, ventas de la semana, ventas del mes, ventas del mes anterior' y quiero que calcules tambien cuantas ventas he hecho, cuantas han sido canceladas, cuanto dinero a entrado este mes y cuanto a salido. 
