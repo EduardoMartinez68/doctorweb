@@ -202,7 +202,7 @@
         <div class="collapse navbar-collapse" id="plNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="home.php">Inicio</a>
+                    <a class="nav-link" href="../../../apps/dashboard/views/home.php">Inicio</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
@@ -231,7 +231,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="../../../apps/patients/views/home.php">ver mis Pacientes</a>
                         </li>
-                        <li><a class="dropdown-item" href="../../../apps/patients/views/create.php">Crear Paciente
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/add_patient_flash.php">Crear Paciente
                                 Rapido</a></li>
                         <li><a class="dropdown-item" href="../../../apps/patients/views/medical-record.php">Crear
                                 expediente Paciente</a></li>

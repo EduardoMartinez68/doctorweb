@@ -15,6 +15,7 @@ include '../../../middleware/database.php';
 
 <?php include '../../../layouts/navbar.php'; ?>
 <?php include '../partials/view_patient/form.php'; ?>
+<br>
 <?php include '../../../layouts/scripts.php'; ?>
 
 

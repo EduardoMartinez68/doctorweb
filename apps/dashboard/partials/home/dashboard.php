@@ -497,6 +497,7 @@
         document.getElementById('appointmentsLastMonth').innerText = data.appointments.last_month_total;
         document.getElementById('appointmentsCancelled').innerText = data.appointments.cancelled_month;
         document.getElementById('appointmentsCompleted').innerText = data.appointments.completed_month;
+        console.log(data.appointments)
         document.getElementById('appointmentsToday').innerText = data.appointments.today;
 
         // ⏳ PRÓXIMAS CITAS

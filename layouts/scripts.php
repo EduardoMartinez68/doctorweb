@@ -1,3 +1,71 @@
+<style>
+    .dashboard-footer-corporate {
+        background-color: #0F172A;
+        color: #ffffff;
+        font-family: 'Inter', sans-serif;
+        
+        /* ESTO ES LO QUE HACE LA MAGIA */
+        position: relative;
+        margin-top: auto; 
+        width: 100%;
+    }
+
+    /* Aseguramos que el contenedor de tus scripts o el html permita el empuje */
+
+
+    /* Estilos estéticos que ya tenías */
+    .footer-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    .footer-link:hover { color: #ffffff; }
+    .magic-box {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        max-width: 300px;
+    }
+    .italic { font-style: italic; }
+</style>
+<footer class="dashboard-footer-corporate">
+    <div class="container-fluid py-5 px-5">
+        <div class="row g-4 justify-content-between align-items-center">
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-cloud-check-fill fs-2 me-2 text-white"></i>
+                    <h3 class="text-white mb-0 fw-bold">ClinicCloud</h3>
+                </div>
+                <p class="text-white-50 small pe-lg-5">
+                    Empresa especializada en soluciones tecnológicas y administrativas para consultorios médicos.
+                </p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 text-md-end">
+                <h6 class="text-white-50 fw-bold text-uppercase small mb-3">Contacto</h6>
+                <a href="https://wa.me/5214446316677" target="_blank" class="footer-link">
+                    <i class="bi bi-whatsapp me-2"></i>+52 1 444 631 6677
+                </a>
+            </div>
+        </div>
+
+        <hr class="mt-5 border-white opacity-10">
+
+        <div class="row pt-2">
+            <div class="col-md-6">
+                <p class="text-white-50 small mb-0">© <?php echo date('Y'); ?> Todos los derechos reservados.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <span class="text-white fw-bold small">{ED} SOFTWARE DEVELOPER</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -823,7 +891,7 @@
                 window.location.href = `${this.editLink}?id=${id}`;
             }
         }
-        
+
         updatePaginationUI() {
             const root = this.shadowRoot;
 
@@ -870,7 +938,7 @@
 
             this.closeModal();
         }
-    
+
         setValue(id, text) {
             const name = this.getAttribute('name') || 'item_id';
             const label = this.getAttribute('label') || 'Seleccionar';
@@ -894,7 +962,7 @@
             this.selected = { id: id };
         }
 
-        getValue(){
+        getValue() {
             const name = this.getAttribute('name') || 'item_id';
             const externalInput = this.querySelector(`input[name="${name}"]`);
             if (externalInput) {

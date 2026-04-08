@@ -33,6 +33,7 @@
         background-color: var(--med-bg);
         font-family: 'Inter', sans-serif;
         color: var(--med-text);
+        min-height: 100vh;
     }
 
     .text-primary,
