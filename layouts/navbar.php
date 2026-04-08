@@ -1,14 +1,27 @@
 <div class="offcanvas offcanvas-start border-0 shadow" tabindex="-1" id="sidebarMedico" aria-labelledby="sidebarLabel">
     <div class="offcanvas-header border-bottom">
-        <div class="d-flex align-items-center">
-            <div class="bg-primary rounded-circle me-2"
-                style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                <i class="fi fi-ss-user-md"></i>
-            </div>
-            <h5 class="offcanvas-title fw-bold" id="sidebarLabel">Doctor<span
-                    class="text-primary text-opacity-75">Web</span></h5>
+        <div class="d-flex align-items-center gap-2">
+
+            <!-- 🧠 LOGO -->
+            <?php if (!empty($_SESSION['clinic_logo'])): ?>
+                <img src="../../../<?php echo $_SESSION['clinic_logo']; ?>" alt="Logo"
+                    style="width:35px;height:35px;object-fit:cover;border-radius:8px;">
+            <?php else: ?>
+                <!-- 🧠 FALLBACK -->
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                    style="width:35px;height:35px;color:white;">
+                    <i class="fi fi-ss-user-md"></i>
+                </div>
+            <?php endif; ?>
+
+            <!-- 🏥 NOMBRE -->
+            <span style="font-weight:600;">
+                <?php echo $_SESSION['clinic_name'] ?? 'Clínica'; ?>
+            </span>
+
         </div>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
     </div>
 
     <div class="offcanvas-body d-flex flex-column">
@@ -56,8 +69,9 @@
                 <a class="nav-link nav-link-med" href="../../settings/views/home.php">Configuraciones</a>
             </li>
             <li class="nav-item border-top mt-3 pt-3">
-                <a class="nav-link nav-link-med text-danger" href="../../../middleware/logout.php"><i class="bi bi-box-arrow-right"></i>
-                     Cerrar Sesión</a>
+                <a class="nav-link nav-link-med text-danger" href="../../../middleware/logout.php"><i
+                        class="bi bi-box-arrow-right"></i>
+                    Cerrar Sesión</a>
                 </a>
             </li>
         </ul>
@@ -195,8 +209,10 @@
                         Consultas
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/consultation/views/home.php">Ver mis consultas</a></li>
-                        <li><a class="dropdown-item" href="../../../apps/consultation/views/form_consultation.php">Crear un Consulta</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/consultation/views/home.php">Ver mis
+                                consultas</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/consultation/views/form_consultation.php">Crear
+                                un Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -213,11 +229,15 @@
                         Pacientes
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/patients/views/home.php">ver mis Pacientes</a></li>
-                        <li><a class="dropdown-item" href="../../../apps/patients/views/create.php">Crear Paciente Rapido</a></li>
-                        <li><a class="dropdown-item" href="../../../apps/patients/views/medical-record.php">Crear expediente Paciente</a></li>
-                        <li><a class="dropdown-item" href="../../../apps/patients/views/home_patients_delete.php">Ver Pacientes Eliminados</a></li>
-                        
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/home.php">ver mis Pacientes</a>
+                        </li>
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/create.php">Crear Paciente
+                                Rapido</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/medical-record.php">Crear
+                                expediente Paciente</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/patients/views/home_patients_delete.php">Ver
+                                Pacientes Eliminados</a></li>
+
                         <!---
                         <li><a class="dropdown-item" onclick="open_pop_lateral('popPaciente')">Crear Paciente Rapido</a></li>
                         ---->
