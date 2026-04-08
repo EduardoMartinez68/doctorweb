@@ -28,7 +28,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="btn btn-medical w-100">
                     Guardar Servicio
                 </button>
 

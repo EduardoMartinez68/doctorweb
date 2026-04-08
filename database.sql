@@ -105,19 +105,18 @@ CREATE TABLE IF NOT EXISTS services (
 
 CREATE TABLE IF NOT EXISTS sales (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    
     create_by INT NOT NULL,
     clinic_id INT NOT NULL,
     patient_id INT,
-    
     sale_date DATE NOT NULL,
     
+    title VARCHAR(255) NOT NULL,
+
     subtotal DECIMAL(10,2) NOT NULL,
     discount DECIMAL(10,2) DEFAULT 0,
     total DECIMAL(10,2) NOT NULL,
     
     payment_method ENUM('cash', 'card', 'transfer') DEFAULT 'cash',
-
     status ENUM('completed', 'cancelled') DEFAULT 'completed',
     
     notes TEXT,

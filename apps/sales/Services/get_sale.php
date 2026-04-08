@@ -79,6 +79,7 @@ try {
         'success' => true,
         'sale' => [
             'id'             => $sale['id'],
+            'title'      => $sale['title'],
             'sale_date'      => $sale['sale_date'],
             'subtotal'       => (float)$sale['subtotal'],
             'discount'       => (float)$sale['discount'],

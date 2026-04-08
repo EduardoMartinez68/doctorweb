@@ -10,6 +10,8 @@ $user_id   = $_SESSION['user_id'];
 // 📥 INPUT
 $input = json_decode(file_get_contents("php://input"), true);
 
+
+$title          = $input['title'] ?? null;
 $items          = $input['items'] ?? [];
 $payment_method = $input['payment_method'] ?? 'cash';
 $notes          = $input['notes'] ?? null;
@@ -33,11 +35,12 @@ try {
 
     // 🧾 INSERT SALE
     $stmt = $pdo->prepare("
-        INSERT INTO sales (create_by, clinic_id, sale_date, subtotal, discount, total, payment_method)
-        VALUES (?, ?, CURDATE(), ?, ?, ?, ?)
+        INSERT INTO sales (title, create_by, clinic_id, sale_date, subtotal, discount, total, payment_method)
+        VALUES (?, ?, ?, CURDATE(), ?, ?, ?, ?)
     ");
 
     $stmt->execute([
+        $title,
         $user_id,
         $clinic_id,
         $subtotal,

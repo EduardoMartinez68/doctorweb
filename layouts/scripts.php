@@ -893,6 +893,16 @@
             // Creamos un objeto mínimo con el ID para mantener consistencia
             this.selected = { id: id };
         }
+
+        getValue(){
+            const name = this.getAttribute('name') || 'item_id';
+            const externalInput = this.querySelector(`input[name="${name}"]`);
+            if (externalInput) {
+                return externalInput.value;
+            }
+
+            return null;
+        }
     }
 
     customElements.define('dynamic-selector', DynamicSelector);
