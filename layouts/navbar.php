@@ -44,7 +44,7 @@
                 <a class="nav-link nav-link-med" href="../../patients/views/home.php">Pacientes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../fiels/views/home.php">Archivos</a>
+                <a class="nav-link nav-link-med" href="../../files/views/home.php">Archivos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-link-med" href="../../users/views/home.php">Usuarios</a>
@@ -204,7 +204,7 @@
                         ventas
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="medical-record.php">Ver mis Ventas</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/sales/views/home.php">Ver mis Ventas</a></li>
                         <li><a class="dropdown-item" href="../../../apps/sales/views/sale.php">Crear una Venta</a></li>
                     </ul>
                 </li>

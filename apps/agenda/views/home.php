@@ -84,13 +84,15 @@ include '../../../middleware/authentication.php';
                 const a = result.data;
 
                 // 🔥 RELLENAR FORM
-                document.querySelector('[name="patient_id"]').value = a.patient_id;
                 document.querySelector('[name="doctor_id"]').value = a.user_id;
                 document.querySelector('[name="date"]').value = a.date;
                 document.querySelector('[name="start_time"]').value = a.start_time;
                 document.querySelector('[name="end_time"]').value = a.end_time;
                 document.querySelector('[name="reason"]').value = a.reason ?? '';
                 document.querySelector('[name="notes"]').value = a.notes ?? '';
+
+                document.getElementById('form_appoint_patient_id').setValue(a.patient_id, a.patient_name)
+                document.getElementById('form_appoint_doctor_id').setValue(a.user_id, a.doctor_name)
 
                 // 🔥 BOTÓN IR A CONSULTA
                 const btn = document.getElementById('goConsultation');

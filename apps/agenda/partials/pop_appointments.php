@@ -2,6 +2,11 @@
 #btnCancelAppoint {
     display: none;
 }
+
+#goConsultation{
+    : none;
+}
+
 </style>
 <plus-pop name="pop_appointments" title="Formulario de Cita">
     <div class="container mt-4">
@@ -14,7 +19,9 @@
             <div class="row">
                 <div class="col">
                     <label>Paciente</label>
-                    <dynamic-selector title="Seleccionar Paciente" link="../../patients/services/search_patients.php"
+                    <dynamic-selector id="form_appoint_patient_id"
+                        title="Seleccionar Paciente" 
+                        link="../../patients/services/search_patients.php"
                         columns="ID,Nombre,email,Teléfono" keys="key_id,name,email,cellphone" name="patient_id"
                         add="openPop('pop_add_patient_flash')" edit="update_data_patient_pop_flash">
                     </dynamic-selector>
@@ -22,7 +29,9 @@
                 <div class="col">
                     <label>Doctor</label>
                     <!---link="../../users/services/search_users.php?role=doctor"---->
-                    <dynamic-selector title="Seleccionar Doctor" link="../../users/services/search_users.php"
+                    <dynamic-selector id="form_appoint_doctor_id"
+                        title="Seleccionar Doctor" 
+                        link="../../users/services/search_users.php"
                         name="doctor_id" columns="Nombre,Email,Teléfono,Rol" keys="name,email,phone,role">
                     </dynamic-selector>
                 </div>
@@ -186,6 +195,7 @@ include '../../../apps/patients/partials/pop_view_patient_flash.php';
     function hidden_or_activate_button_cancel_of_the_form_appoint() {
         const appointmentId = document.getElementById('appointment_id')?.value;
         const btnCancel = document.getElementById('btnCancelAppoint');
+        const goConsultation=document.getElementById('goConsultation')
 
         if (!btnCancel) return;
 
@@ -193,8 +203,10 @@ include '../../../apps/patients/partials/pop_view_patient_flash.php';
         // Si está vacío (es nueva), lo ocultamos.
         if (appointmentId && appointmentId.trim() !== "") {
             btnCancel.style.display = 'block'; // O 'inline-block' según tu CSS
+            goConsultation.style.display='block';
         } else {
             btnCancel.style.display = 'none';
+            goConsultation.style.display='none';
         }
     }
 

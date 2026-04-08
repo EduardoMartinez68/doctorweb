@@ -329,6 +329,9 @@
             this.editLink = this.getAttribute('edit') || '';
             this.addLink = this.getAttribute('add') || '';
 
+            this.value = this.getAttribute('value') || '';
+            this.textValue = this.getAttribute('textValue') || '';
+
             const name = this.getAttribute('name') || 'item_id';
             let externalInput = this.querySelector(`input[name="${name}"]`);
             if (!externalInput) {
@@ -814,9 +817,6 @@
                 // Reemplazamos o inyectamos el ID si es necesario, 
                 // o simplemente ejecutamos el string asumiendo que la función sabe qué hacer
                 new Function('id', this.editLink)(id);
-                // Nota: Si el string es "openPop('flash')", esto lo ejecutará tal cual.
-                // Si quieres que pase el ID automáticamente podrías usar: 
-                // new Function('id', `window.${this.editLink.replace(')', `, ${id})`)`)(id);
             }
             // Si es una URL
             else {
@@ -869,6 +869,29 @@
             }));
 
             this.closeModal();
+        }
+    
+        setValue(id, text) {
+            const name = this.getAttribute('name') || 'item_id';
+            const label = this.getAttribute('label') || 'Seleccionar';
+
+            // 1. Actualizar el input oculto en el Light DOM
+            const externalInput = this.querySelector(`input[name="${name}"]`);
+            if (externalInput) {
+                externalInput.value = id;
+                // Disparamos el evento 'change' por si tienes listeners externos (como el de ocultar el botón cancelar)
+                externalInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // 2. Actualizar el texto visible en el Shadow DOM
+            const displayLabel = this.shadowRoot.getElementById('selectedText');
+            if (displayLabel) {
+                displayLabel.innerText = text || label;
+            }
+
+            // 3. Sincronizar el objeto 'selected' interno por si se consulta después
+            // Creamos un objeto mínimo con el ID para mantener consistencia
+            this.selected = { id: id };
         }
     }
 

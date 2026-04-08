@@ -68,6 +68,24 @@ CREATE TABLE IF NOT EXISTS patients (
     FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE
 );
 
+/*--------------------------------------FILES---------------------------------------------*/
+CREATE TABLE medical_files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    clinic_id INT NOT NULL,
+    user_id INT NOT NULL, -- doctor
+
+    file_name VARCHAR(255),
+    file_path TEXT,
+
+    mime_type VARCHAR(100),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 /*--------------------------------------SALES---------------------------------------------*/
 CREATE TABLE IF NOT EXISTS services (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -146,6 +164,8 @@ CREATE TABLE IF NOT EXISTS payments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE
 );
+
+
 
 
 /*--------------------------------------CLINIC---------------------------------------------*/

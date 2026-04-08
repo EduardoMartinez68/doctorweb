@@ -1,6 +1,7 @@
 /middleware/setup_admin.php 
 (esto es para crear el usuario admin)
 
+5 de junio
 -----------------------------------------------------------
 Crear el usuario admin
 Crear el cliente 'Publico en General' 
