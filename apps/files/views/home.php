@@ -96,18 +96,45 @@ function renderTable(files) {
             <td>
                 <button class="btn btn-sm btn-primary view">Ver</button>
                 <button class="btn btn-sm btn-success download">Descargar</button>
+                <button class="btn btn-sm btn-danger delete">Eliminar</button>
             </td>
         `;
 
+        // 👁️ VER
         tr.querySelector('.view').onclick = () => {
             window.open(`../../files/services/view_file.php?id=${file.id}`, '_blank');
         };
 
+        // ⬇️ DESCARGAR
         tr.querySelector('.download').onclick = () => {
             const link = document.createElement('a');
             link.href = `../../files/services/view_file.php?id=${file.id}`;
             link.download = file.file_name;
             link.click();
+        };
+
+        // ❌ ELIMINAR
+        tr.querySelector('.delete').onclick = async () => {
+
+            const confirm = await Swal.fire({
+                title: '¿Eliminar archivo?',
+                text: 'Esta acción no se puede deshacer',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar'
+            });
+
+            if (!confirm.isConfirmed) return;
+
+            const res = await fetch(`../../files/services/delete_file.php?id=${file.id}`);
+            const data = await res.json();
+
+            if (data.success) {
+                Swal.fire('Eliminado', data.message, 'success');
+                loadFiles(); // 🔄 recargar tabla
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
         };
 
         tbody.appendChild(tr);
