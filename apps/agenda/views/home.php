@@ -14,6 +14,86 @@ include '../../../middleware/authentication.php';
     ?>
 
     <link rel="stylesheet" href="../public/css/agenda.css?v=1.0.3">
+    <style>
+        :root {
+            --med-border: #e2e8f0;
+            --med-text-title: #334155;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 74, 173, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .title-section h4 {
+            color: var(--med-primary);
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Toolbar de Filtros para corregir el desajuste */
+        .agenda-toolbar {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex-grow: 1;
+            width: 400px;
+        }
+
+        .filter-label {
+            
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        /* Botón de Actualizar Minimalista */
+        #btnUpdate {
+            background-color: var(--med-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 600;
+            height: 48px;
+            /* Altura fija para coincidir con la mayoría de los inputs/selectors */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        #btnUpdate:hover {
+            background-color: #003a8a;
+            box-shadow: 0 4px 12px rgba(0, 74, 173, 0.2);
+        }
+
+
+        /* Personalización de FullCalendar para que se vea moderno */
+        .fc {
+            --fc-border-color: #f1f5f9;
+            --fc-button-bg-color: #ffffff;
+            --fc-button-border-color: #e2e8f0;
+            --fc-button-text-color: #475569;
+            --fc-button-hover-bg-color: #f8fafc;
+            --fc-button-hover-border-color: #cbd5e1;
+            --fc-button-active-bg-color: var(--med-primary);
+            --fc-button-active-border-color: var(--med-primary);
+            --fc-button-active-text-color: #ffffff;
+            --fc-today-bg-color: rgba(56, 182, 255, 0.05);
+        }
+    </style>
 </head>
 
 
@@ -21,29 +101,33 @@ include '../../../middleware/authentication.php';
 
     <?php include '../../../layouts/navbar.php'; ?>
 
-    <div class="container mt-4">
+    <div class="container py-4">
 
-        <h4>Calendario de Citas</h4>
-
-        <!-- 🔍 FILTROS -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label>Doctor</label>
-                <!---link="../../users/services/search_users.php?role=doctor"---->
-                <dynamic-selector title="Seleccionar Doctor" link="../../users/services/search_users.php"
-                    name="doctor_search_id" columns="Nombre,Email,Teléfono,Rol" keys="name,email,phone,role">
-                </dynamic-selector>
+        <div class="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-md-end">
+            <div class="title-section mb-3 mb-md-0">
+                <span class="text-muted small fw-bold text-uppercase">Panel de Gestión</span>
+                <h4>Calendario de Citas</h4>
             </div>
 
-            <div class="col-md-2 d-flex align-items-end">
-                <button id="btnUpdate" class="btn btn-primary w-100">
-                    Actualizar
-                </button>
+            <div class="agenda-toolbar">
+                <div class="filter-group">
+                    <label class="filter-label">Filtrar por Especialista</label>
+                    <dynamic-selector title="Seleccionar Doctor" link="../../users/services/search_users.php"
+                        name="doctor_search_id" columns="Nombre,Email,Teléfono,Rol" keys="name,email,phone,role">
+                    </dynamic-selector>
+                </div>
+
+                <div class="action-group">
+                    <button id="btnUpdate" class="btn">
+                        <i class="bi bi-arrow-clockwise me-2"></i> Actualizar
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- 📅 CALENDARIO -->
-        <div id="calendar"></div>
+        <div id="calendar-card">
+            <div id="calendar"></div>
+        </div>
 
     </div>
 
@@ -54,6 +138,7 @@ include '../../../middleware/authentication.php';
     include '../../../layouts/scripts.php';
     ?>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
     <script>
         let calendar;
 
@@ -115,7 +200,6 @@ include '../../../middleware/authentication.php';
         async function renderCalendar(doctorId = '') {
 
             const events = await loadAppointments(doctorId);
-            console.log(events)
             const calendarEl = document.getElementById('calendar');
 
             // 🔥 destruir si ya existe
@@ -127,10 +211,17 @@ include '../../../middleware/authentication.php';
                 initialView: 'dayGridMonth',
                 locale: 'es',
                 selectable: true,
+                initialView: 'timeGridWeek',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día'
                 },
                 // Cargamos los eventos llamando a nuestra función simulada
                 events: events,
@@ -156,14 +247,14 @@ include '../../../middleware/authentication.php';
                     end.setHours(start.getHours() + 1); // Sumamos 1 hora exacta
                     const end_time = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
-                    document.getElementById('appointment_id').value='';
+                    document.getElementById('appointment_id').value = '';
                     hidden_or_activate_button_cancel_of_the_form_appoint();
                     open_pop_appointments(fecha, start_time, end_time)
                 },
                 // Acción al hacer clic en un evento
                 eventClick: function (info) {
                     const id = info.event.id;
-                    document.getElementById('appointment_id').value=id;
+                    document.getElementById('appointment_id').value = id;
                     loadAppointment(id);
                     hidden_or_activate_button_cancel_of_the_form_appoint();
                     openPop('pop_appointments')

@@ -129,16 +129,20 @@
                 </div>
 
                 <div class="p-4">
-                    <div class="mb-4">
-                        <label class="form-label-custom">Buscar Servicio o Procedimiento</label>
-                        <dynamic-selector
-                            id="serviceSelector"
-                            link="../../services/services/search_services.php"
-                            columns="Nombre,Precio"
-                            keys="name,price">
-                        </dynamic-selector>
-                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="mb-4">
+                                <label class="form-label-custom">Buscar Servicio o Procedimiento</label>
+                                <dynamic-selector
+                                    id="serviceSelector"
+                                    link="../../services/services/search_services.php"
+                                    columns="Nombre,Precio"
+                                    keys="name,price">
+                                </dynamic-selector>
+                            </div>
 
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table align-middle" id="salesTable">
                             <thead class="text-muted small">
@@ -163,7 +167,7 @@
                     
                     <div class="mb-4">
                         <label class="form-label-custom">Título / Concepto</label>
-                        <input type="text" id="saleTitle" class="form-control minimal-input" placeholder="Ej: Limpieza dental completa">
+                        <input type="text" id="saleTitle" class="form-control minimal-input" placeholder="Ej: Limpieza dental completa" value="Nueva Venta">
                     </div>
 
                     <div class="mb-4">
@@ -191,8 +195,8 @@
                         <i class="bi bi-check2-circle me-2"></i> Confirmar y Guardar
                     </button>
 
-                    <button class="btn btn-outline-secondary w-100 d-none" id="btnPrint" style="border-radius: 12px; padding: 0.8rem;">
-                        <i class="bi bi-printer me-2"></i> Imprimir Recibo
+                    <button class="btn btn-outline-primary w-100 d-none" id="btnView" style="border-radius: 12px; padding: 0.8rem;">
+                        <i class="bi bi-printer me-2"></i> Ver Recibo
                     </button>
                 </div>
             </div>
@@ -291,6 +295,18 @@ document.getElementById('btnCreate').addEventListener('click', async () => {
         return;
     }
 
+    if (!title.trim()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campo requerido',
+            text: 'Debes agregar un nombre a la venta'
+        });
+        title.focus();
+        return;
+    }
+
+
+
     const res = await fetch('../../sales/services/create_sale.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -313,14 +329,19 @@ document.getElementById('btnCreate').addEventListener('click', async () => {
         });
 
         document.getElementById('btnCreate').classList.add('d-none');
-        document.getElementById('btnPrint').classList.remove('d-none');
+        document.getElementById('btnView').classList.remove('d-none');
+
+
+        document.getElementById('btnView').addEventListener('click', () => {
+            window.location.href = `../../sales/views/view_sale.php?id=${data.sale_id}`;
+        });
+
         renderTable();
     } else {
         Swal.fire('Error', data.message, 'error');
     }
 });
 
-document.getElementById('btnPrint').addEventListener('click', () => window.print());
 </script>
 
 </body>

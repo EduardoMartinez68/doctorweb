@@ -21,6 +21,11 @@ if (empty($items)) {
     exit;
 }
 
+if (empty($title)) {
+    echo json_encode(['success' => false, 'message' => 'Necesitas agregar un nombre a la venta']);
+    exit;
+}
+
 try {
     $pdo->beginTransaction();
 

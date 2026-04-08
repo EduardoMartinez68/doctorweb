@@ -21,6 +21,7 @@
         --med-primary: #004AAD;
         --med-primary-hover: #02377e;
         --text-color-title: #38B6FF;
+        --med-secondary: #38B6FF;
         --med-bg: #F4F5FF;
         --med-text: #334155;
         --med-border: #e2e8f0;
@@ -165,6 +166,11 @@
     /* Opcional: Asegúrate de que el backdrop (fondo oscuro) también cubra todo */
     .swal2-backdrop-show {
         z-index: 99998 !important;
+    }
+
+    dynamic-selector {
+        display: block;
+        margin-bottom: 1rem;
     }
 </style>
 
