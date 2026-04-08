@@ -1,6 +1,15 @@
 <?php
 include '../../../middleware/authentication.php';
 include '../../../middleware/database.php';
+require_once '../../../utils/Encryption.php';
+
+function decryptSafe($value) {
+    try {
+        return $value ? Encryption::decrypt($value) : null;
+    } catch (Exception $e) {
+        return null;
+    }
+}
 
 header('Content-Type: application/json');
 
@@ -174,6 +183,86 @@ $servicesData = array_map(function($s) use ($names) {
     ];
 }, $services);
 
+
+
+// 📅 CITAS - RESUMEN GENERAL
+$stmt = $pdo->prepare("
+    SELECT 
+        COUNT(CASE WHEN date BETWEEN ? AND ? THEN 1 END) as month_total,
+        COUNT(CASE WHEN date BETWEEN ? AND ? THEN 1 END) as last_month_total,
+        
+        SUM(CASE 
+            WHEN status = 'cancelled' 
+            AND date BETWEEN ? AND ? 
+            THEN 1 ELSE 0 
+        END) as cancelled_month,
+
+        SUM(CASE 
+            WHEN status = 'completed' 
+            AND date BETWEEN ? AND ? 
+            THEN 1 ELSE 0 
+        END) as completed_month
+
+    FROM appointments
+    WHERE clinic_id = ?
+");
+$stmt->execute([
+    $startMonth, $endMonth,
+    $startLastMonth, $endLastMonth,
+    $startMonth, $endMonth,
+    $startMonth, $endMonth,
+    $clinic_id
+]);
+
+$appointments = $stmt->fetch();
+
+
+$stmt = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM appointments
+    WHERE clinic_id = ?
+    AND date = ?
+    AND status != 'cancelled'
+");
+$stmt->execute([$clinic_id, $today]);
+
+$todayAppointments = (int)$stmt->fetchColumn();
+
+
+$stmt = $pdo->prepare("
+    SELECT 
+        a.id,
+        a.date,
+        a.start_time,
+        a.status,
+        a.reason,
+        p.name as patient_name
+    FROM appointments a
+    INNER JOIN patients p ON p.id = a.patient_id
+    WHERE a.clinic_id = ?
+    AND a.date >= ?
+    AND a.status != 'cancelled'
+    ORDER BY a.date ASC, a.start_time ASC
+    LIMIT 5
+");
+$stmt->execute([$clinic_id, $today]);
+
+$nextAppointments = $stmt->fetchAll();
+
+$nextAppointments = array_map(function($a) {
+    return [
+        'id' => $a['id'],
+        'date' => $a['date'],
+        'time' => $a['start_time'],
+        'reason' => $a['reason'],
+        'status' => $a['status'],
+        'patient' => decryptSafe($a['patient_name'])
+    ];
+}, $nextAppointments);
+
+
+
+
 // 🚀 RESPUESTA FINAL
 echo json_encode([
     'patients' => [
@@ -199,5 +288,14 @@ echo json_encode([
         'outcome' => (float)$money['outcome'],
     ],
     'chart' => $chartData,
-    'top_services' => $servicesData
+    'top_services' => $servicesData,
+    'appointments' => [
+        'month_total'       => (int)$appointments['month_total'],
+        'last_month_total'  => (int)$appointments['last_month_total'],
+        'cancelled_month'   => (int)$appointments['cancelled_month'],
+        'completed_month'   => (int)$appointments['completed_month'],
+        'today'             => $todayAppointments
+    ],
+
+    'next_appointments' => $nextAppointments
 ]);
