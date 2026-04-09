@@ -80,7 +80,7 @@ include '../../../middleware/database.php';
                 </select>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-outline-primary w-100 py-2" onclick="resetFilters()">Limpiar</button>
+                <button class="btn btn-outline-primary w-100 py-2" onclick="resetFilters()">Agregar Usuario</button>
             </div>
         </div>
     </div>
@@ -207,10 +207,11 @@ document.getElementById('roleFilter').addEventListener('change', () => fetchUser
 document.getElementById('statusFilter').addEventListener('change', () => fetchUsers(1));
 
 function resetFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('roleFilter').value = 'doctor';
-    document.getElementById('statusFilter').value = 'active';
-    fetchUsers(1);
+    //document.getElementById('searchInput').value = '';
+    //document.getElementById('roleFilter').value = 'doctor';
+    //document.getElementById('statusFilter').value = 'active';
+    //fetchUsers(1);
+    window.location.href = "user_create.php";
 }
 
 // Carga inicial
