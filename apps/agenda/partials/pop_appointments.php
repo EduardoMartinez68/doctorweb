@@ -229,6 +229,10 @@ include '../../../apps/patients/partials/pop_view_patient_flash.php';
                 closePop('pop_appointments');
                 Swal.fire({
                     icon: 'success',
+                    confirmButtonColor: '#004AAD',
+                    cancelButtonColor: '#94a3b8',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
                     title: 'Cita creada',
                     text: data.message,
                     confirmButtonText: 'OK'

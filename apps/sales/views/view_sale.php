@@ -422,6 +422,10 @@ include '../../../middleware/database.php';
             const confirm = await Swal.fire({
                 title: '¿Confirmar cancelación?',
                 text: 'Esto invalidará el recibo actual',
+                confirmButtonColor: '#004AAD',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Sí, cancelar',
+                cancelButtonText: 'Cancelar',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33'

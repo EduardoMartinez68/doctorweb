@@ -48,7 +48,7 @@ include '../../../middleware/database.php';
             add="../../patients/views/add_patient_flash.php">
         </dynamic-table>
     </div>
-    
+
 
     <?php
     include '../../../layouts/scripts.php';

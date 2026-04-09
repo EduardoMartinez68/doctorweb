@@ -347,6 +347,10 @@ btnUpdate.addEventListener('click', async () => {
 btnDelete.addEventListener('click', async () => {
     const confirm = await Swal.fire({
         title: '¿Eliminar paciente?',
+        confirmButtonColor: '#004AAD',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
         icon: 'warning',
         showCancelButton: true
     });
