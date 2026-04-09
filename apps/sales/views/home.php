@@ -199,7 +199,7 @@ include '../../../middleware/authentication.php';
                         </button>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn btn-outline-secondary w-100" onclick="resetFilters()">
+                        <button class="btn btn-outline-primary w-100" onclick="resetFilters()">
                             Limpiar filtros
                         </button>
                     </div>

@@ -41,6 +41,9 @@
         color: var(---med-primary);
     }
 
+    .btn-primary-med:hover{
+        background-color: var(--med-primary-hover);
+    }
     .nav-item {
         color: var(---med-primary);
     }
@@ -150,9 +153,9 @@
     }
 
     .btn-outline-primary:hover {
-        background-color: var(--med-primary-online);
-        color: white;
-        border-color: transparent;
+        background-color: transparent;
+        color: var(--med-primary-online);
+        border-color: var(--med-primary-online);
     }
 
     .btn-search {

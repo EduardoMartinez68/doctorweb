@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('user', 'doctor', 'admin') DEFAULT 'admin',
     clinic_id INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    status ENUM('active', 'inactive') DEFAULT 'active'
 );
 
 CREATE TABLE IF NOT EXISTS clinic (

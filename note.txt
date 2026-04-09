@@ -155,4 +155,44 @@ y esto es un ejemplo de una etiqueta personalizada en el frontend para renderiza
     edit="../../patients/views/patient.php?id=">
 </dynamic-selector>
 
-Ahora necesito que me ayudes a crear la API para el dashboard done voy obtener lo siguiente 'ventas del dia, ventas de la semana, ventas del mes, ventas del mes anterior' y quiero que calcules tambien cuantas ventas he hecho, cuantas han sido canceladas, cuanto dinero a entrado este mes y cuanto a salido. 
+Ahora necesito que me ayudes a crear la API para crear el modulo de 'recetas medicas'. Necesito que crees una interfaz minimalista, amigable e intuitiva. 
+Crea la API para ver las recetas medicas y crearlas. 
+Estas es la base de datos para mis recetas medicas. 
+/*--------------------------------------CLINIC---------------------------------------------*/
+CREATE TABLE IF NOT EXISTS prescriptions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    clinic_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    create_by INT NOT NULL,
+
+    diagnosis TEXT,
+    general_instructions TEXT,
+    
+    issued_date DATE NOT NULL,
+    
+    status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (create_by) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (clinic_id) REFERENCES clinic(id) ON DELETE CASCADE,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS prescription_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    prescription_id INT NOT NULL,
+    
+    medicine_name VARCHAR(150) NOT NULL,
+    
+    dosage VARCHAR(100), -- ej: "500mg"
+    frequency VARCHAR(100), -- ej: "cada 8 horas"
+    duration VARCHAR(100), -- ej: "7 días"
+    
+    instructions TEXT, -- ej: "después de alimentos"
+    
+    FOREIGN KEY (prescription_id) REFERENCES prescriptions(id) ON DELETE CASCADE
+);
+

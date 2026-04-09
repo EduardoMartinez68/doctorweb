@@ -38,7 +38,7 @@
 
         <ul class="nav flex-column mb-auto">
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php"><i class="bi bi-house-door"></i>
+                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">
                     Dashboard</a>
             </li>
             <li class="nav-item">
@@ -51,7 +51,7 @@
                 <a class="nav-link nav-link-med" href="../../services/views/home.php">Servicios</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-med" href="../../dashboard/views/home.php">Recetas</a>
+                <a class="nav-link nav-link-med" href="../../prescriptions/views/home.php">Recetas</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-link-med" href="../../patients/views/home.php">Pacientes</a>
