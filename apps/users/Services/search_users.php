@@ -1,5 +1,5 @@
 <?php
-include '../../../middleware/authentication.php'; // 🔥 IMPORTANTE
+include '../../../middleware/authentication.php';
 include '../../../middleware/database.php';
 
 header('Content-Type: application/json');
@@ -9,7 +9,10 @@ $clinic_id = $_SESSION['clinic_id'];
 // 🔥 INPUTS SEGUROS
 $page   = max(1, (int)($_GET['page'] ?? 1));
 $search = trim($_GET['search'] ?? '');
-$role   = $_GET['role'] ?? ''; // opcional (doctor, admin, user)
+
+// 🎯 NUEVOS FILTROS
+$role   = $_GET['role'] ?? 'doctor';     // 🔥 default doctor
+$status = $_GET['status'] ?? 'active';   // 🔥 default active
 
 $limit  = 20;
 $offset = ($page - 1) * $limit;
@@ -18,20 +21,30 @@ $offset = ($page - 1) * $limit;
 $params = [$clinic_id];
 $where  = "WHERE clinic_id = ?";
 
+// 👨‍⚕️ FILTRO POR ROL
 if (!empty($role)) {
     $where .= " AND role = ?";
     $params[] = $role;
 }
 
+// 🟢 FILTRO POR STATUS
+if (!empty($status)) {
+    $where .= " AND status = ?";
+    $params[] = $status;
+}
+
+// 🔍 BUSCADOR
 if (!empty($search)) {
-    $where .= " AND (name LIKE ? OR email LIKE ?)";
+    $where .= " AND (name LIKE ? OR email LIKE ? OR phone LIKE ? OR cellphone LIKE ?)";
+    $params[] = "%$search%";
+    $params[] = "%$search%";
     $params[] = "%$search%";
     $params[] = "%$search%";
 }
 
 // 🔥 SOLO COLUMNAS NECESARIAS
 $sql = "
-    SELECT id, name, email, phone, cellphone, role, created_at
+    SELECT id, name, email, phone, cellphone, role, status, created_at
     FROM users
     $where
     ORDER BY id DESC
@@ -57,6 +70,7 @@ $data = array_map(function($u) {
         'phone'      => $u['phone'],
         'cellphone'  => $u['cellphone'],
         'role'       => $u['role'],
+        'status'     => $u['status'], // 🔥 importante para UI
         'created_at' => $u['created_at'],
     ];
 }, $users);
