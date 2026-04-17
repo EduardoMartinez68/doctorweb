@@ -189,7 +189,7 @@
                     </div>
                     
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <span class="fw-bold text-dark">Total a Cobrar</span>
+                        <span class="fw-bold text-dark item-total">Total a Cobrar</span>
                         <div class="total-amount">$<span id="grandTotal">0.00</span></div>
                     </div>
 
@@ -252,7 +252,7 @@ function renderTable() {
                     <input type="number" class="form-control border-0 bg-light discount" value="${item.discount}" ${saleCreated ? 'disabled':''} style="border-radius: 8px;">
                 </div>
             </td>
-            <td class="fw-bold text-dark">$${item.total.toFixed(2)}</td>
+            <td class="fw-bold text-dark item-total">$${item.total.toFixed(2)}</td>
             <td class="text-end">
                 ${saleCreated ? '' : `<button class="delete-btn delete"><i class="bi bi-trash"></i></button>`}
             </td>
@@ -261,11 +261,11 @@ function renderTable() {
         if (!saleCreated) {
             tr.querySelector('.price').addEventListener('input', (e) => {
                 item.price = parseFloat(e.target.value) || 0;
-                updateItem(item);
+                updateItem(item, tr);
             });
             tr.querySelector('.discount').addEventListener('input', (e) => {
                 item.discount = parseFloat(e.target.value) || 0;
-                updateItem(item);
+                updateItem(item, tr);
             });
             tr.querySelector('.delete').addEventListener('click', () => {
                 items.splice(index, 1);
@@ -278,11 +278,14 @@ function renderTable() {
     calculateTotal();
 }
 
-function updateItem(item) {
+function updateItem(item, rowElement) {
     item.total = item.price - item.discount;
+
+    // 🔥 Actualiza SOLO el total de la fila
+    rowElement.querySelector('.item-total').innerText = '$' + item.total.toFixed(2);
+
+    // 🔥 Actualiza total general
     calculateTotal();
-    // Renderizado suave solo de los totales para evitar perder el focus
-    renderTable(); 
 }
 
 function calculateTotal() {

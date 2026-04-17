@@ -52,8 +52,8 @@ include '../../../middleware/database.php';
             <p class="text-muted">Gestiona roles, accesos y estados de tus empleados.</p>
         </div>
         <div class="col-md-6 text-md-end">
-            <button class="btn btn-primary px-4 shadow-sm" onclick="location.reload()">
-                <i class="bi bi-arrow-primary"></i> Actualizar
+            <button class="btn btn-primary px-4 shadow-sm" onclick="add_user()">
+                <i class="bi bi-arrow-primary"></i> Agregar Usuario
             </button>
         </div>
     </div>
@@ -80,7 +80,7 @@ include '../../../middleware/database.php';
                 </select>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-outline-primary w-100 py-2" onclick="resetFilters()">Agregar Usuario</button>
+                <button class="btn btn-outline-primary w-100 py-2" onclick="location.reload()">Actualizar</button>
             </div>
         </div>
     </div>
@@ -206,7 +206,7 @@ document.getElementById('searchInput').addEventListener('input', () => {
 document.getElementById('roleFilter').addEventListener('change', () => fetchUsers(1));
 document.getElementById('statusFilter').addEventListener('change', () => fetchUsers(1));
 
-function resetFilters() {
+function add_user() {
     //document.getElementById('searchInput').value = '';
     //document.getElementById('roleFilter').value = 'doctor';
     //document.getElementById('statusFilter').value = 'active';

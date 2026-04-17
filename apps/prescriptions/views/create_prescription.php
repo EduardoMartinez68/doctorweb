@@ -185,62 +185,62 @@ include '../../../middleware/database.php';
         let items = [];
         let savedPrescription = null;
 
-        function addItem() {
+        window.addItem = function () {
             const index = items.length;
             const itemContainer = document.createElement('div');
             itemContainer.className = 'card med-item p-3 shadow-sm border-0';
             itemContainer.id = `item-row-${index}`;
 
             itemContainer.innerHTML = `
-        <div class="row g-2">
-            <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Nombre del medicamento" 
-                    onchange="updateItem(${index}, 'medicine_name', this.value)">
-            </div>
-            <div class="col-md-3">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Cant." onchange="updateItem(${index}, 'dosage_qty', this.value)">
-                    <select class="form-select" onchange="updateItem(${index}, 'presentation', this.value)">
-                        <option value="Tableta(s)">Tableta(s)</option>
-                        <option value="Cápsula(s)">Cápsula(s)</option>
-                        <option value="Jarabe (ml)">Jarabe (ml)</option>
-                        <option value="Ampolleta(s)">Ampolleta(s)</option>
-                        <option value="Gotas">Gotas</option>
-                        <option value="Aplicación">Aplicación</option>
-                    </select>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Nombre del medicamento" 
+                            onchange="updateItem(${index}, 'medicine_name', this.value)">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Cant." onchange="updateItem(${index}, 'dosage_qty', this.value)">
+                            <select class="form-select" onchange="updateItem(${index}, 'presentation', this.value)">
+                                <option value="Tableta(s)">Tableta(s)</option>
+                                <option value="Cápsula(s)">Cápsula(s)</option>
+                                <option value="Jarabe (ml)">Jarabe (ml)</option>
+                                <option value="Ampolleta(s)">Ampolleta(s)</option>
+                                <option value="Gotas">Gotas</option>
+                                <option value="Aplicación">Aplicación</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">Cada</span>
+                            <input type="number" class="form-control" placeholder="8" onchange="updateItem(${index}, 'freq_val', this.value)">
+                            <select class="form-select" onchange="updateItem(${index}, 'freq_unit', this.value)">
+                                <option value="Horas">Horas</option>
+                                <option value="Días">Días</option>
+                                <option value="Única dosis">Única dosis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mt-2">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white">Durante</span>
+                            <input type="number" class="form-control" placeholder="7" onchange="updateItem(${index}, 'dur_val', this.value)">
+                            <select class="form-select" onchange="updateItem(${index}, 'dur_unit', this.value)">
+                                <option value="Días">Días</option>
+                                <option value="Semanas">Semanas</option>
+                                <option value="Meses">Meses</option>
+                                <option value="Indefinido">Indefinido</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <input type="text" class="form-control" placeholder="Nota adicional (ej. después de comer)" onchange="updateItem(${index}, 'note', this.value)">
+                    </div>
+                    <div class="col-md-1 mt-2 text-end">
+                        <button type="button" class="btn btn-link text-danger" onclick="removeItem(${index})"><i class="bi bi-trash"></i></button>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-white">Cada</span>
-                    <input type="number" class="form-control" placeholder="8" onchange="updateItem(${index}, 'freq_val', this.value)">
-                    <select class="form-select" onchange="updateItem(${index}, 'freq_unit', this.value)">
-                        <option value="Horas">Horas</option>
-                        <option value="Días">Días</option>
-                        <option value="Única dosis">Única dosis</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-5 mt-2">
-                <div class="input-group">
-                    <span class="input-group-text bg-white">Durante</span>
-                    <input type="number" class="form-control" placeholder="7" onchange="updateItem(${index}, 'dur_val', this.value)">
-                    <select class="form-select" onchange="updateItem(${index}, 'dur_unit', this.value)">
-                        <option value="Días">Días</option>
-                        <option value="Semanas">Semanas</option>
-                        <option value="Meses">Meses</option>
-                        <option value="Indefinido">Indefinido</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6 mt-2">
-                <input type="text" class="form-control" placeholder="Nota adicional (ej. después de comer)" onchange="updateItem(${index}, 'note', this.value)">
-            </div>
-            <div class="col-md-1 mt-2 text-end">
-                <button type="button" class="btn btn-link text-danger" onclick="removeItem(${index})"><i class="bi bi-trash"></i></button>
-            </div>
-        </div>
-    `;
+            `;
 
             document.getElementById('items').appendChild(itemContainer);
             items.push({
@@ -305,8 +305,6 @@ include '../../../middleware/database.php';
             clinicData = await res.json();
         }
 
-        // Llama a esto al cargar el DOM
-        document.addEventListener('DOMContentLoaded', loadClinicInfo);
 
         function printPrescription() {
             if (!savedPrescription) {
@@ -317,71 +315,71 @@ include '../../../middleware/database.php';
             // 1. Construimos el contenido de los medicamentos (Rp)
             // Usamos los nuevos campos: dosage_qty, presentation, freq_val, etc.
             let itemsListHTML = savedPrescription.items.map(i => `
-        <div style="margin-bottom: 20px; border-bottom: 1px dotted #ccc; padding-bottom: 10px;">
-            <strong style="font-size: 16px; color: #1e293b;">${i.medicine_name || 'Sin nombre'}</strong><br>
-            <span style="font-size: 14px; color: #475569;">
-                Tomar ${i.dosage_qty || ''} ${i.presentation || ''} 
-                cada ${i.freq_val || ''} ${i.freq_unit || ''} 
-                durante ${i.dur_val || ''} ${i.dur_unit || ''}.
-            </span>
-            ${i.note ? `<br><em style="font-size: 13px; color: #64748b;">Nota: ${i.note}</em>` : ''}
-        </div>
-    `).join('');
+                <div style="margin-bottom: 20px; border-bottom: 1px dotted #ccc; padding-bottom: 10px;">
+                    <strong style="font-size: 16px; color: #1e293b;">${i.medicine_name || 'Sin nombre'}</strong><br>
+                    <span style="font-size: 14px; color: #475569;">
+                        Tomar ${i.dosage_qty || ''} ${i.presentation || ''} 
+                        cada ${i.freq_val || ''} ${i.freq_unit || ''} 
+                        durante ${i.dur_val || ''} ${i.dur_unit || ''}.
+                    </span>
+                    ${i.note ? `<br><em style="font-size: 13px; color: #64748b;">Nota: ${i.note}</em>` : ''}
+                </div>
+            `).join('');
 
             // 2. Creamos el diseño completo de la receta profesional
             const finalHTML = `
-        <html>
-        <head>
-            <title>Receta Médica - ${savedPrescription.patient}</title>
-            <style>
-                body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 40px; color: #334155; line-height: 1.6; }
-                .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid ${clinicData.brand_color || '#004AAD'}; padding-bottom: 20px; }
-                .clinic-info h2 { margin: 0; color: ${clinicData.brand_color || '#004AAD'}; text-transform: uppercase; }
-                .clinic-info p { margin: 2px 0; font-size: 13px; color: #64748b; }
-                .patient-section { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 8px; }
-                .rp-section { margin-top: 40px; min-height: 300px; }
-                .rp-title { font-size: 24px; color: ${clinicData.brand_color || '#004AAD'}; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
-                .footer { margin-top: 50px; text-align: center; }
-                .signature-box { margin-left: auto; width: 280px; border-top: 1px solid #334155; padding-top: 10px; margin-top: 60px; }
-                @media print { .no-print { display: none; } }
-            </style>
-        </head>
-        <body>
-            <div class="header">
-                <div class="clinic-info">
-                    <h2>${clinicData.name || 'Clínica Plus'}</h2>
-                    <p>${clinicData.address || ''}</p>
-                    <p>Tel: ${clinicData.phone || ''} | Cel: ${clinicData.cellphone || ''}</p>
-                    <p>${clinicData.email || ''}</p>
-                </div>
-                ${clinicData.logo ? `<img src="${clinicData.logo}" style="max-height: 80px;">` : ''}
-            </div>
+                <html>
+                <head>
+                    <title>Receta Médica - ${savedPrescription.patient}</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 40px; color: #334155; line-height: 1.6; }
+                        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid ${clinicData.brand_color || '#004AAD'}; padding-bottom: 20px; }
+                        .clinic-info h2 { margin: 0; color: ${clinicData.brand_color || '#004AAD'}; text-transform: uppercase; }
+                        .clinic-info p { margin: 2px 0; font-size: 13px; color: #64748b; }
+                        .patient-section { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 8px; }
+                        .rp-section { margin-top: 40px; min-height: 300px; }
+                        .rp-title { font-size: 24px; color: ${clinicData.brand_color || '#004AAD'}; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; }
+                        .footer { margin-top: 50px; text-align: center; }
+                        .signature-box { margin-left: auto; width: 280px; border-top: 1px solid #334155; padding-top: 10px; margin-top: 60px; }
+                        @media print { .no-print { display: none; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="clinic-info">
+                            <h2>${clinicData.name || 'Clínica Plus'}</h2>
+                            <p>${clinicData.address || ''}</p>
+                            <p>Tel: ${clinicData.phone || ''} | Cel: ${clinicData.cellphone || ''}</p>
+                            <p>${clinicData.email || ''}</p>
+                        </div>
+                        ${clinicData.logo ? `<img src="${clinicData.logo}" style="max-height: 80px;">` : ''}
+                    </div>
 
-            <div class="patient-section">
-                <div><strong>Paciente:</strong> ${savedPrescription.patient}</div>
-                <div style="text-align: right;"><strong>Fecha:</strong> ${savedPrescription.date}</div>
-                <div style="grid-column: span 2;"><strong>Diagnóstico:</strong> ${savedPrescription.diagnosis || 'N/A'}</div>
-            </div>
+                    <div class="patient-section">
+                        <div><strong>Paciente:</strong> ${savedPrescription.patient}</div>
+                        <div style="text-align: right;"><strong>Fecha:</strong> ${savedPrescription.date}</div>
+                        <div style="grid-column: span 2;"><strong>Diagnóstico:</strong> ${savedPrescription.diagnosis || 'N/A'}</div>
+                    </div>
 
-            <div class="rp-section">
-                <div class="rp-title">Rp.</div>
-                ${itemsListHTML}
-            </div>
+                    <div class="rp-section">
+                        <div class="rp-title">Rp.</div>
+                        ${itemsListHTML}
+                    </div>
 
-            <div style="margin-top: 20px;">
-                <strong>Indicaciones Generales:</strong><br>
-                <p style="font-size: 14px;">${savedPrescription.instructions || 'Sin indicaciones adicionales.'}</p>
-            </div>
+                    <div style="margin-top: 20px;">
+                        <strong>Indicaciones Generales:</strong><br>
+                        <p style="font-size: 14px;">${savedPrescription.instructions || 'Sin indicaciones adicionales.'}</p>
+                    </div>
 
-            <div class="footer">
-                <div class="signature-box">
-                    <strong>Dr. <?php echo $_SESSION['user_name']; ?></strong><br>
-                    <small>Cédula Profesional: ___________</small>
-                </div>
-            </div>
-        </body>
-        </html>
-    `;
+                    <div class="footer">
+                        <div class="signature-box">
+                            <strong>Dr. <?php echo $_SESSION['user_name']; ?></strong><br>
+                            <small>Cédula Profesional: ___________</small>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
 
             // 3. Abrimos la ventana e imprimimos el contenido generado
             const win = window.open('', '', 'width=900,height=800');
@@ -396,11 +394,11 @@ include '../../../middleware/database.php';
         }
 
 
-        let savedPrescription = null;
-
         async function loadPrescription() {
             const id = new URLSearchParams(window.location.search).get('id');
-
+            if(!id){
+                return;
+            }
             const res = await fetch(`../../prescriptions/services/get_prescription.php?id=${id}`);
             const data = await res.json();
 
@@ -433,7 +431,6 @@ include '../../../middleware/database.php';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadPrescription);
 
 
         function addCancelButton(id) {
@@ -472,6 +469,10 @@ include '../../../middleware/database.php';
 
             document.querySelector('.row.mt-5').appendChild(btn);
         }
+    
+        document.addEventListener('DOMContentLoaded', loadPrescription);
+        // Llama a esto al cargar el DOM
+        document.addEventListener('DOMContentLoaded', loadClinicInfo);
     </script>
 
 </body>
