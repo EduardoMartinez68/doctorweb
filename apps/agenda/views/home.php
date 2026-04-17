@@ -36,13 +36,6 @@ include '../../../middleware/authentication.php';
         }
 
         /* Toolbar de Filtros para corregir el desajuste */
-        .agenda-toolbar {
-            display: flex;
-            align-items: flex-end;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
         .filter-group {
             flex-grow: 1;
             width: 400px;
@@ -67,18 +60,32 @@ include '../../../middleware/authentication.php';
             padding: 0.7rem 1.5rem;
             font-weight: 600;
             height: 48px;
-            /* Altura fija para coincidir con la mayoría de los inputs/selectors */
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            transform: translateY(-14px); 
         }
 
         #btnUpdate:hover {
             background-color: #003a8a;
             box-shadow: 0 4px 12px rgba(0, 74, 173, 0.2);
         }
+.agenda-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
 
+.filter-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+#btnUpdate {
+    white-space: nowrap;
+}
 
         /* Personalización de FullCalendar para que se vea moderno */
         .fc {
@@ -109,19 +116,23 @@ include '../../../middleware/authentication.php';
                 <h4>Calendario de Citas</h4>
             </div>
 
-            <div class="agenda-toolbar">
+            <div class="agenda-toolbar d-flex flex-column flex-md-row align-items-end gap-3">
+
                 <div class="filter-group">
                     <label class="filter-label">Filtrar por Especialista</label>
-                    <dynamic-selector title="Seleccionar Doctor" link="../../users/services/search_users.php"
-                        name="doctor_search_id" columns="Nombre,Email,Teléfono,Rol" keys="name,email,phone,role">
+                    <dynamic-selector 
+                        title="Seleccionar Doctor" 
+                        link="../../users/services/search_users.php"
+                        name="doctor_search_id" 
+                        columns="Nombre,Email,Teléfono,Rol" 
+                        keys="name,email,phone,role">
                     </dynamic-selector>
                 </div>
 
-                <div class="action-group">
-                    <button id="btnUpdate" class="btn">
-                        <i class="bi bi-arrow-clockwise me-2"></i> Actualizar
-                    </button>
-                </div>
+                <button id="btnUpdate" class="btn">
+                    <i class="bi bi-arrow-clockwise me-2"></i> Actualizar
+                </button>
+
             </div>
         </div>
 
