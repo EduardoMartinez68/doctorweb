@@ -221,7 +221,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="../../../apps/sales/views/home.php">Ver mis Ventas</a></li>
-                        <li><a class="dropdown-item" href="../../../apps/sales/views/sale.php">Crear una Venta</a></li>
+                        <li><a class="dropdown-item" href="../../../apps/sales/views/create_sale.php">Crear una Venta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

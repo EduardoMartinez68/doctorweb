@@ -94,6 +94,7 @@ include '../../../middleware/authentication.php';
                 });
 
                 const result = await response.json();
+                console.log(JSON.stringify(data, null, 2));
                 console.log(result)
                 // 5. Manejar la respuesta del servidor
                 if (result.success) {
