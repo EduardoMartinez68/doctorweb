@@ -361,6 +361,7 @@ CREATE TABLE IF NOT EXISTS appointments (
 
 
 /*--------------------------------------MEDICAL RECORDS---------------------------------------------*/
+
 CREATE TABLE IF NOT EXISTS medical_records (
     id INT AUTO_INCREMENT PRIMARY KEY,
 

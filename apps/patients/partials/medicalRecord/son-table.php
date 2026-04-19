@@ -72,4 +72,25 @@
 
         return children;
     }
+
+    function reset_children_table() {
+        const rows = document.querySelectorAll("#bodyHijos tr");
+
+        rows.forEach(row => {
+            // 1. Limpiar Selects (Género y Sano)
+            const selectGenero = row.querySelector(".genero");
+            const selectSano = row.querySelector(".sano");
+            
+            if(selectGenero) selectGenero.selectedIndex = 0;
+            if(selectSano) selectSano.selectedIndex = 0;
+
+            // 2. Limpiar Edad (Input número)
+            const inputEdad = row.querySelector(".edad");
+            if(inputEdad) inputEdad.value = "";
+
+            // 3. Limpiar Observaciones (Textarea o Input)
+            const inputObs = row.querySelector(".observaciones");
+            if(inputObs) inputObs.value = "";
+        });
+    }
 </script>

@@ -77,7 +77,7 @@ function get_data_table_family(){
             family: row.querySelector(".familiar").value,
             live: row.querySelector(".vive").value,
             old: row.querySelector(".edad").value,
-            he_is_healthy.: row.querySelector(".sano").value,
+            he_is_healthy: row.querySelector(".sano").value,
             comment: row.querySelector(".comentarios").value
         };
         family.push(data);

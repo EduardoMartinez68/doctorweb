@@ -87,5 +87,29 @@
         return occupationalHistory
     }
 
+function reset_occupational_table() {
+    const rows = document.querySelectorAll("#bodyLaboral tr");
 
+    rows.forEach(row => {
+        // 1. Limpiar inputs de texto (Empresa, Puesto, Tiempo)
+        row.querySelector(".empresa").value = "";
+        row.querySelector(".puesto").value = "";
+        row.querySelector(".tiempo").value = "";
+
+        // 2. Limpiar el select de Accidentes (volver al valor por defecto)
+        row.querySelector(".accidentes").selectedIndex = 0;
+
+        // 3. Limpiar Select Múltiple de Exposiciones
+        const selectExposicion = row.querySelector(".exposicion");
+        
+        // Si usas un select múltiple estándar de HTML:
+        Array.from(selectExposicion.options).forEach(option => {
+            option.selected = false;
+        });
+
+        // NOTA: Si usas una librería como Select2 o Choices.js, 
+        // deberás disparar el evento de cambio:
+        // $(selectExposicion).val(null).trigger('change'); 
+    });
+}
 </script>

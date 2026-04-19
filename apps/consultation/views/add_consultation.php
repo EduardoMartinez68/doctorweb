@@ -271,15 +271,15 @@ include '../../../middleware/database.php';
                     <div class="row g-3">
                         <div class="col-12">
                             <label class="form-label">Motivo de Consulta</label>
-                            <textarea name="reason_for_consultation" class="form-control" rows="2"></textarea>
+                            <textarea name="reason_for_consultation" class="form-control" rows="10"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Sustantivo (Síntomas)</label>
-                            <textarea name="symptoms" class="form-control" rows="4"></textarea>
+                            <textarea name="symptoms" class="form-control" rows="8"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Objetivo (Exploración Física Detallada)</label>
-                            <textarea name="physical_exploration" class="form-control" rows="4"></textarea>
+                            <textarea name="physical_exploration" class="form-control" rows="8"></textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Diagnóstico</label>

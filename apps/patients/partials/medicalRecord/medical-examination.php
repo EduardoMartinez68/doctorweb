@@ -448,7 +448,7 @@
     }
 
     function get_medical_examination_data() {
-        const container = document.getElementById('MEDICAL-EXAM');
+        const container = document.getElementById('padecimientosList');
         const checkboxes = container.querySelectorAll('input[type="checkbox"]');
 
         const data = {};
