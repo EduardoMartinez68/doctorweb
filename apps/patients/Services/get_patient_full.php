@@ -55,6 +55,39 @@ try {
     $stmt->execute([$id, $clinic_id]);
     $record = $stmt->fetch();
 
+    // 🧠 SI NO EXISTE, CREAR EXPEDIENTE AUTOMÁTICAMENTE
+    if (!$record) {
+
+        $insert = $pdo->prepare("
+            INSERT INTO medical_records (
+                patient_id,
+                clinic_id,
+                marital_status,
+                education_level,
+                lifestyle_smoking,
+                lifestyle_alcohol,
+                lifestyle_drugs,
+                lifestyle_activity,
+                lifestyle_diet,
+                menstrual_rhythm,
+                pap_smear_done
+            ) VALUES (?, ?, 'soltero', 'primaria', 'No', 'No', 'No', 'Nula', 'Balanceada', 'Regular', 'No')
+        ");
+
+        $insert->execute([$id, $clinic_id]);
+
+        // 🔁 VOLVER A CONSULTAR
+        $stmt = $pdo->prepare("
+            SELECT *
+            FROM medical_records
+            WHERE patient_id = ? AND clinic_id = ?
+            LIMIT 1
+        ");
+
+        $stmt->execute([$id, $clinic_id]);
+        $record = $stmt->fetch();
+    }
+
     // 🧠 FORMATEAR RESPUESTA
     $response = [
         'id'        => $patient['id'],
@@ -105,6 +138,24 @@ try {
             'lifestyle_activity'  => $record['lifestyle_activity'],
             'lifestyle_diet'      => $record['lifestyle_diet'],
 
+            // 🧬 ANTECEDENTES PERSONALES
+            'personal_chronic' => $record['personal_chronic'],
+            'personal_chronic_comment' => $record['personal_chronic_comment'],
+
+            'personal_trauma' => $record['personal_trauma'],
+            'personal_trauma_comment' => $record['personal_trauma_comment'],
+
+            'personal_surgery' => $record['personal_surgery'],
+            'personal_surgery_comment' => $record['personal_surgery_comment'],
+
+            'personal_allergy' => $record['personal_allergy'],
+            'personal_allergy_comment' => $record['personal_allergy_comment'],
+
+            'personal_transfusion' => $record['personal_transfusion'],
+            'personal_transfusion_comment' => $record['personal_transfusion_comment'],
+            'personal_transfusion_date' => $record['personal_transfusion_date'],
+            'personal_transfusion_type' => $record['personal_transfusion_type'],
+
             // GINECO
             'menarche_age' => $record['menarche_age'],
             'sexual_onset_age' => $record['sexual_onset_age'],
@@ -121,6 +172,15 @@ try {
             'pap_smear_result' => $record['pap_smear_result'],
             'ob_gyn_observations' => $record['ob_gyn_observations'],
 
+            // 🏃 ACTIVIDAD FÍSICA
+            'does_exercise' => (bool)$record['does_exercise'],
+            'exercise_type' => $record['exercise_type'],
+            'exercise_frequency' => $record['exercise_frequency'],
+            'safety_shoe_impediment' => (bool)$record['safety_shoe_impediment'],
+            'dominant_hand' => $record['dominant_hand'],
+
+            'laboratory_data' => $record['occupational_history']
+
         ] : null
     ];
 
@@ -133,6 +193,6 @@ try {
 
     echo json_encode([
         'success' => false,
-        'message' => 'Error al obtener paciente'
+        'message' => $e
     ]);
 }

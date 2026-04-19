@@ -28,6 +28,7 @@
 
 
 <script>
+    
     function agregarLaboral(data = {}) {
         const tbody = document.getElementById("bodyLaboral");
 
@@ -48,7 +49,7 @@
         </td>
 
         <td>
-            <select class="form-select exposicion" multiple>
+            <select class="form-select exposicion">
                 <option ${data.exposicion?.includes("Ruido") ? "selected" : ""}>Ruido</option>
                 <option ${data.exposicion?.includes("Polvo") ? "selected" : ""}>Polvo</option>
                 <option ${data.exposicion?.includes("Humo") ? "selected" : ""}>Humo</option>
