@@ -222,69 +222,43 @@ CREATE TABLE IF NOT EXISTS medical_consultation (
     -- 1. Signos Vitales (Somatometría)
     weight DECIMAL(5,2),           -- Peso en kg
     height DECIMAL(5,2),           -- Estatura
-    IMC DECIMAL(5,2), -- masa corporal kg/mt2
-    TA DECIMAL(5,2), -- tension arterial mmhg
-    FC DECIMAL(5,2), --frecuencia cardiaca, 
-    abdominal_perimeter DECIMAL(5,2), --periometro abdominal, 
-
-    FR DECIMAL(5,2),      -- frecuencia respiratoria
+    imc DECIMAL(5,2),              -- Índice masa corporal
     temperature DECIMAL(4,1),      -- Temperatura en °C
     blood_pressure VARCHAR(20),    -- "120/80"
-    heart_rate INT,                -- bpm
-    respiratory_rate INT,          -- rpm
+    heart_rate INT,                -- bpm (reemplaza a FC)
+    respiratory_rate INT,          -- rpm (reemplaza a FR)
     oxygen_saturation INT,         -- %
+    abdominal_perimeter DECIMAL(5,2), 
 
-    -- 2. campos de evaluacion fisica 
+    -- 2. Evaluación Física General
     actitud ENUM('normal', 'anormal') DEFAULT 'normal',
     habitus ENUM('normal', 'anormal') DEFAULT 'normal',
     facies ENUM('normal', 'anormal') DEFAULT 'normal',
     marcha ENUM('normal', 'anormal') DEFAULT 'normal',
     aparente ENUM('A', 'M', 'B') DEFAULT 'A',
 
-
-    --2.1 campos visual 
+    -- 2.1 Vista
     campos_visuales ENUM('normal', 'anormal') DEFAULT 'normal',
     pupilas ENUM('normal', 'anormal') DEFAULT 'normal',
     conjuntiva ENUM('normal', 'anormal') DEFAULT 'normal',
     movimientos_oculares ENUM('normal', 'anormal') DEFAULT 'normal',
     parpados ENUM('normal', 'anormal') DEFAULT 'normal',
-
-    -- Valores para Ojo Derecho (OD)
-    od_sin_lentes VARCHAR(10), -- Ej: '20/40'
-    od_con_lentes VARCHAR(10), -- Ej: '20/20'
-
-    -- Valores para Ojo Izquierdo (OI)
+    od_sin_lentes VARCHAR(10),
+    od_con_lentes VARCHAR(10),
     oi_sin_lentes VARCHAR(10),
     oi_con_lentes VARCHAR(10),
+    observaciones_ojos TEXT,
 
-    -- Visión Binocular (Ambos ojos)
-    binocular_sin_lentes VARCHAR(10),
-    binocular_con_lentes VARCHAR(10),
-
-    -- Visión Cercana (VC)
-    vc_sin_lentes VARCHAR(10), -- Ej: 'J1', 'J2' o '0.50'
-    vc_con_lentes VARCHAR(10),
-
-    -- Diagnóstico (Tu duda anterior)
-    tiene_diagnostico TINYINT(1) DEFAULT 0, -- 0: No, 1: Sí
-    observacionesOjo TEXT,
-
+    -- 2.2 Cabeza y Cuello
     oidos ENUM('normal', 'anormal') DEFAULT 'normal',
     nariz ENUM('normal', 'anormal') DEFAULT 'normal',
     boca ENUM('normal', 'anormal') DEFAULT 'normal',
     dientes ENUM('normal', 'anormal') DEFAULT 'normal',
-    orofaringe ENUM('normal', 'anormal') DEFAULT 'normal',
-
-    --2.2 cuello y columna cervical
     cuello_alineacion ENUM('normal', 'anormal') DEFAULT 'normal',
-    cuello_arcos_movilidad ENUM('normal', 'anormal') DEFAULT 'normal',
-    cuello_trofismo ENUM('normal', 'anormal') DEFAULT 'normal',
-    cuello_tono_muscular ENUM('normal', 'anormal') DEFAULT 'normal',
     cuello_tiroides ENUM('normal', 'anormal') DEFAULT 'normal',
     ganglios ENUM('neg', 'pos') DEFAULT 'neg',
-    masas ENUM('neg', 'pos') DEFAULT 'neg',
 
-    --2.3 espalda y col dorsolumbar
+    -- 2.3 espalda y col dorsolumbar
     espalda_alineacion ENUM('normal', 'anormal') DEFAULT 'normal',
     simetria_hombros ENUM('normal', 'anormal') DEFAULT 'normal',
     eslapda_trofismo ENUM('normal', 'anormal') DEFAULT 'normal',
@@ -294,25 +268,51 @@ CREATE TABLE IF NOT EXISTS medical_consultation (
     puntos_dolorosos ENUM('neg', 'pos') DEFAULT 'neg',
     laseague ENUM('neg', 'pos') DEFAULT 'neg',
 
-    --2.4 miembros superiores
-    espalda_alineacion ENUM('normal', 'anormal') DEFAULT 'normal',
-    simetria_hombros ENUM('normal', 'anormal') DEFAULT 'normal',
-    eslapda_trofismo ENUM('normal', 'anormal') DEFAULT 'normal',
-    espalda_arcos_movilidad ENUM('normal', 'anormal') DEFAULT 'normal',
-    espalda_tono_muscular ENUM('normal', 'anormal') DEFAULT 'normal',
-    espalda_fuerza ENUM('normal', 'anormal') DEFAULT 'normal',
-    puntos_dolorosos ENUM('neg', 'pos') DEFAULT 'neg',
-    laseague ENUM('neg', 'pos') DEFAULT 'neg',
+    -- 2.4 miembros superiores
+    miembro_inferior_integridad  ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal', -- d: derecha, l: izquierda
+    miembro_inferior_fuerza ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    miembro_superior_arcos_movilidad ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    miembro_superior_p_dolorosos ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
+    miembro_superior_pulsos ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    miembro_superior_fuerza ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    miembro_superior_quistes ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
+    miembro_superior_deformidad ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
 
-    -- 3. Cuerpo de la Consulta (Método SOAP)
-    reason_for_consultation TEXT,  -- Subjetivo (Motivo)
-    symptoms TEXT,                 -- Subjetivo (Síntomas)
+    -- 2.5 torax
+    torax_amplexion ENUM('normal', 'anormal') DEFAULT 'normal',
+    torax_amplexacion ENUM('normal', 'anormal') DEFAULT 'normal',
+    torax_ruidos_cardiacos ENUM('normal', 'anormal') DEFAULT 'normal',
+    torax_ruidos_respiratorios ENUM('normal', 'anormal') DEFAULT 'normal',
+
+    -- 2.6 abdomen
+    abdomen_inspeccion ENUM('normal', 'anormal') DEFAULT 'normal',
+    abdomen_palpacion ENUM('normal', 'anormal') DEFAULT 'normal',
+    abdomen_peritaltismo ENUM('normal', 'anormal') DEFAULT 'normal',
+    abdomen_tono_muscular ENUM('normal', 'anormal') DEFAULT 'normal',
+    abdomen_cicatriz_umbilical ENUM('normal', 'anormal') DEFAULT 'normal',
+    abdomen_videromegalias ENUM('neg', 'pos') DEFAULT 'neg',
+    abdomen_tumuraciones ENUM('neg', 'pos') DEFAULT 'neg',
+
+    abdomen_integridad ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    abdomen_miembro_superior_trofismo ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    abdomen_miembro_superior_arcos_movilidad ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    abdomen_miembro_superior_p_dolorosos ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
+    abdomen_miembro_superior_pulsos ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    abdomen_miembro_superior_fuerza ENUM('normal', 'anormal', 'd', 'l') DEFAULT 'normal',
+    abdomen_miembro_superior_quistes ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
+    abdomen_miembro_superior_deformidad ENUM('neg', 'pos', 'd', 'l') DEFAULT 'neg',
+
+    coloracion ENUM('normal', 'anormal') DEFAULT 'normal',
+    lesiones ENUM('neg', 'pos') DEFAULT 'neg',
+    tatuajes ENUM('neg', 'pos') DEFAULT 'neg',
+    cicatrices ENUM('neg', 'pos') DEFAULT 'neg',
+
+    reason_for_consultation TEXT,  -- Motivo
+    symptoms TEXT,                 -- Subjetivo
     physical_exploration TEXT,     -- Objetivo
-    medical_diagnosis TEXT,        -- Análisis (Diagnóstico)
+    medical_diagnosis TEXT,        -- Diagnóstico
     treatment_plan TEXT,           -- Plan
-    internal_notes TEXT,           -- Notas privadas
 
-    -- 4. Control y Trazabilidad
     status ENUM('draft', 'completed', 'cancelled') DEFAULT 'completed',
     consultation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -329,8 +329,8 @@ CREATE TABLE IF NOT EXISTS medical_consultation (
 /*--------------------------------------APPOINTMENTS---------------------------------------------*/
 CREATE TABLE IF NOT EXISTS appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL, --this is the doctor of the appoint
-    create_by INT NOT NULL, --this is the user that create the appoint
+    user_id INT NOT NULL, -- this is the doctor of the appoint
+    create_by INT NOT NULL, -- this is the user that create the appoint
     patient_id INT NOT NULL,
     clinic_id INT NOT NULL,
     service_id INT NOT NULL,

@@ -36,7 +36,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="d-flex align-items-center mb-3">
                     <i class="bi bi-cloud-check-fill fs-2 me-2 text-white"></i>
-                    <h3 class="text-white mb-0 fw-bold">ClinicCloud</h3>
+                    <h3 class="text-white mb-0 fw-bold">SoftClinic</h3>
                 </div>
                 <p class="text-white-50 small pe-lg-5">
                     Empresa especializada en soluciones tecnológicas y administrativas para consultorios médicos.

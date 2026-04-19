@@ -1,106 +1,107 @@
 <?php
 include '../../../middleware/authentication.php';
+include '../../../middleware/database.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Ventas</title>
-    <?php
-    include '../../../layouts/styles.php';
-    ?>
+    <title>Consultas Médicas</title>
+    <?php include '../../../layouts/styles.php'; ?>
 </head>
 
 <body>
-    <?php
-    include '../../../layouts/navbar.php';
-    ?>
-    <div class="container py-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h4 mb-0 fw-bold">Panel de Ventas</h2>
-            <a href="medical-record.php" class="btn btn-primary btn-add px-4 shadow-sm">
-                <i class="bi bi-plus-lg me-2"></i>Nueva Venta
-            </a>
-        </div>
 
-        <div class="row mb-3 g-3">
-            <div class="col-md-6">
-                <div class="input-group search-bar shadow-sm">
-                    <span class="input-group-text bg-white border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
-                    <input type="text" class="form-control border-start-0 ps-0"
-                        placeholder="Buscar por cliente o ID...">
-                </div>
-            </div>
-        </div>
+<?php include '../../../layouts/navbar.php'; ?>
 
-        <div class="table-container p-3">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="border-0 text-uppercase small fw-bold">ID Venta</th>
-                            <th class="border-0 text-uppercase small fw-bold">Cliente</th>
-                            <th class="border-0 text-uppercase small fw-bold">Fecha</th>
-                            <th class="border-0 text-uppercase small fw-bold">Monto</th>
-                            <th class="border-0 text-uppercase small fw-bold text-center">Estado</th>
-                            <th class="border-0 text-uppercase small fw-bold text-end">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#00154</td>
-                            <td class="fw-semibold">Elena Rodríguez</td>
-                            <td>22 Mar, 2026</td>
-                            <td>$1,250.00</td>
-                            <td class="text-center">
-                                <span
-                                    class="badge bg-success-subtle text-success border border-success px-3">Completada</span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary border-0"><i
-                                        class="bi bi-eye"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#00155</td>
-                            <td class="fw-semibold">Marcos Vales</td>
-                            <td>21 Mar, 2026</td>
-                            <td>$450.00</td>
-                            <td class="text-center">
-                                <span
-                                    class="badge bg-warning-subtle text-warning-emphasis border border-warning px-3">Pendiente</span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary border-0"><i
-                                        class="bi bi-eye"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#00156</td>
-                            <td class="fw-semibold">Sofía Pérez</td>
-                            <td>20 Mar, 2026</td>
-                            <td>$890.00</td>
-                            <td class="text-center">
-                                <span
-                                    class="badge bg-danger-subtle text-danger border border-danger px-3">Cancelada</span>
-                            </td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-secondary border-0"><i
-                                        class="bi bi-eye"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Consultas Médicas</h4>
+        <button class="btn btn-primary" onclick="openCreateModal()">
+            Nueva consulta
+        </button>
+    </div>
+
+    <!-- TABLA -->
+    <dynamic-table 
+        link="../../consultations/services/search_consultations.php"
+        columns="Paciente,Médico,Fecha,Estado"
+        keys="patient_name,doctor_name,consultation_date,status">
+    </dynamic-table>
+
+</div>
+
+<!-- MODAL CREAR -->
+<div class="modal fade" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Nueva Consulta</h5>
             </div>
+
+            <div class="modal-body">
+
+                <label>Paciente</label>
+                <dynamic-selector
+                    id="patient"
+                    link="../../patients/services/search_patients.php"
+                    columns="Nombre,Email"
+                    keys="name,email">
+                </dynamic-selector>
+
+                <label class="mt-3">Doctor</label>
+                <input type="number" id="doctor_id" class="form-control">
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-dark" onclick="createConsultation()">
+                    Crear
+                </button>
+            </div>
+
         </div>
     </div>
-    <?php
-    include '../../../layouts/scripts.php';
-    ?>
-</body>
+</div>
 
+<?php include '../../../layouts/scripts.php'; ?>
+
+<script>
+function openCreateModal(){
+    window.location.href = "add_consultation.php";
+    //new bootstrap.Modal(document.getElementById('createModal')).show();
+}
+
+function createConsultation(){
+
+    const patient = document.getElementById('patient').value;
+    const doctor  = document.getElementById('doctor_id').value;
+
+    fetch('../../consultations/services/create_consultation.php', {
+        method: 'POST',
+        body: new URLSearchParams({
+            patient_id: patient,
+            doctor_id: doctor
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+
+        if(res.success){
+            Swal.fire('Éxito', 'Consulta creada', 'success')
+            location.reload();
+        } else {
+            Swal.fire('Error', res.message, 'error')
+        }
+
+    });
+
+}
+</script>
+
+</body>
 </html>
