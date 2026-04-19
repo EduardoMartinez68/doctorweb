@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 include '../../../middleware/authentication.php';
 include '../../../middleware/database.php';
 require_once '../../../utils/Encryption.php';
@@ -109,11 +112,11 @@ try {
 
             // ADDRESS
             'domicilio' => decryptSafe($record['street_address']),
-            'num_ext'   => decryptSafe($record['ext_number']),
-            'num_int'   => decryptSafe($record['int_number']),
             'colonia'   => decryptSafe($record['neighborhood']),
             'ciudad'    => decryptSafe($record['city']),
             'state'     => decryptSafe($record['state']),
+            'num_ext'   => decryptSafe($record['ext_number']),
+            'num_int'   => decryptSafe($record['int_number']),    
             'zip_code'  => decryptSafe($record['zip_code']),
 
             // PERSONAL
@@ -179,7 +182,7 @@ try {
             'safety_shoe_impediment' => (bool)$record['safety_shoe_impediment'],
             'dominant_hand' => $record['dominant_hand'],
 
-            'laboratory_data' => $record['occupational_history']
+            'laboratory_data' => jsonSafeDecode($record['occupational_history'])
 
         ] : null
     ];
@@ -190,9 +193,8 @@ try {
     ]);
 
 } catch (Exception $e) {
-
-    echo json_encode([
-        'success' => false,
-        'message' => $e
-    ]);
+echo json_encode([
+    'success' => false,
+    'message' => $e->getMessage()
+]);
 }

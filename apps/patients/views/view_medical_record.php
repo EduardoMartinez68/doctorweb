@@ -35,46 +35,46 @@ include '../../../middleware/authentication.php';
     include '../../../layouts/scripts.php';
     ?>
     <script>
-function render_laboratory_data(laboratory_dataBackned) {
+        function render_laboratory_data(laboratory_dataBackned) {
 
-    let laboratoryData = laboratory_dataBackned;
+            let laboratoryData = laboratory_dataBackned;
 
-    // Parsear si viene como string
-    if (typeof laboratoryData === "string") {
-        try {
-            laboratoryData = JSON.parse(laboratoryData);
-        } catch (e) {
-            console.error("Error parseando laboratory_data:", e);
-            laboratoryData = [];
+            // Parsear si viene como string
+            if (typeof laboratoryData === "string") {
+                try {
+                    laboratoryData = JSON.parse(laboratoryData);
+                } catch (e) {
+                    console.error("Error parseando laboratory_data:", e);
+                    laboratoryData = [];
+                }
+            }
+
+            const tbody = document.getElementById("bodyLaboral");
+
+            // Limpiar tabla
+            tbody.innerHTML = "";
+
+            // Validar
+            if (!Array.isArray(laboratoryData) || laboratoryData.length === 0) {
+                return;
+            }
+
+            // Recorrer datos
+            laboratoryData.forEach(item => {
+
+                const data = {
+                    empresa: item.company || '',
+                    puesto: item.job_title || '',
+                    tiempo: item.duration || '',
+                    accidentes: item.had_accidents ? "Si" : "No",
+                    exposicion: Array.isArray(item.exposures) ? item.exposures : []
+                };
+
+                agregarLaboral(data);
+            });
         }
-    }
 
-    const tbody = document.getElementById("bodyLaboral");
-
-    // Limpiar tabla
-    tbody.innerHTML = "";
-
-    // Validar
-    if (!Array.isArray(laboratoryData) || laboratoryData.length === 0) {
-        return;
-    }
-
-    // Recorrer datos
-    laboratoryData.forEach(item => {
-
-        const data = {
-            empresa: item.company || '',
-            puesto: item.job_title || '',
-            tiempo: item.duration || '',
-            accidentes: item.had_accidents ? "Si" : "No",
-            exposicion: Array.isArray(item.exposures) ? item.exposures : []
-        };
-
-        agregarLaboral(data);
-    });
-}
-
-        function renderActividadFisica(record){
+        function renderActividadFisica(record) {
 
             // checkbox
             document.querySelector('[name="does_exercise"]').checked = !!record.does_exercise;
@@ -146,7 +146,7 @@ function render_laboratory_data(laboratory_dataBackned) {
                 }
 
                 const data = result.data;
-                console.log(JSON.stringify(data, null, 2));
+                //console.log(JSON.stringify(data, null, 2));
 
                 const record = data.record || {};
                 renderAntecedentesPersonalesTable(record);
@@ -206,18 +206,18 @@ function render_laboratory_data(laboratory_dataBackned) {
                 setValue('pap_smear_result', record.pap_smear_result);
                 setValue('ob_gyn_observations', record.ob_gyn_observations);
 
-                
 
-                    // 👨‍👩‍👧 FAMILY
-                    (record.family_history || []).forEach(f => {
-                        agregarFamiliar({
-                            familiar: f.family,
-                            vive: f.live,
-                            edad: f.old,
-                            sano: f.he_is_healthy,
-                            comentarios: f.comment
-                        });
+
+                // 👨‍👩‍👧 FAMILY
+                (record.family_history || []).forEach(f => {
+                    agregarFamiliar({
+                        familiar: f.family,
+                        vive: f.live,
+                        edad: f.old,
+                        sano: f.he_is_healthy,
+                        comentarios: f.comment
                     });
+                });
 
                 // 👶 HIJOS
                 (record.children_data || []).forEach(c => {
@@ -289,7 +289,8 @@ function render_laboratory_data(laboratory_dataBackned) {
                 data.children_data = get_children_data();
                 data.laboratory_data = get_ccupational_data();
                 data.symptoms = get_medical_examination_data();
-                console.log(JSON.stringify(data, null, 2));
+                //console.log(JSON.stringify(data, null, 2));
+                
                 // 4. Enviar a la API
                 const response = await fetch('../../patients/services/update_patient_medical.php', {
                     method: 'POST',

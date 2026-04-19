@@ -373,13 +373,13 @@ CREATE TABLE IF NOT EXISTS medical_records (
     company_center_type INT,
 
     /* -------------------- DOMICILIO -------------------- */
-    street_address VARCHAR(255),
-    ext_number VARCHAR(20),
-    int_number VARCHAR(20),
-    neighborhood VARCHAR(100),
-    city VARCHAR(100),
-    state VARCHAR(100),
-    zip_code VARCHAR(10),
+    street_address TEXT,
+    ext_number TEXT,
+    int_number TEXT,
+    neighborhood TEXT,
+    city TEXT,
+    state TEXT,
+    zip_code TEXT,
 
     /* -------------------- DATOS PERSONALES -------------------- */
     marital_status ENUM('soltero','casado','separado','divorciado','union_libre','viudo'),
